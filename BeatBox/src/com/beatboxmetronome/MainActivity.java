@@ -16,9 +16,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener
+{
+	private Integer mTempo;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,6 +42,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //setContentView(R.layout.metronome_layout);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -73,6 +77,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+        mTempo = new Integer(120);
+        //setTempo(mTempo);
     }
 
 
@@ -109,6 +115,39 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+    
+    
+    public void decTempo()
+    {
+    	setTempo(mTempo--);
+    }
+    
+    
+    public void incTempo()
+    {
+    	setTempo(mTempo++);
+    }
+    
+    private void setTempo(int bpm)
+    {
+    	mTempo = bpm;
+    	String text = new String();
+    	text += mTempo.toString() + " BPM";
+    	PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getItem(2);
+    	View metronome_view = fragment.getView();
+    	if(metronome_view != null)
+    	{
+    		TextView bpmText = (TextView) metronome_view.findViewById(R.id.bpm_text);
+    		if(bpmText != null)
+    			bpmText.setText(text);
+    		else
+    		{
+    			System.out.println("*** CAN'T FIND THE TEXTVIEW OBJECT ***");
+    		}
+    	}
+    	else
+    		System.out.println("*** CAN'T FIND THE METRONOME VIEW OBJECT ***");	
     }
 
     /**
@@ -153,6 +192,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+    	
+    	//private View mView;
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -177,11 +218,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+            View rootView = inflater.inflate(R.layout.metronome_layout, container, false);
+            //mView = rootView;
             return rootView;
         }
+        
+        /*public View getView()
+        {
+        	return mView;
+        }*/
+        
     }
 
 }
