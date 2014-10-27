@@ -11,5 +11,24 @@
     <string name="inc_tempo">+</string>
     <string name="dec_tempo">-</string>
     <string name="song_title">Song Title</string>
+    
+    <!-- Strings for the Load Screen -->
+	<string name="download_button">Download</string>
+	<string name="load_template_name">Placeholder Name Longer</string>
+	<string name="load_edit_button">Edit</string>
+	<string name="load_upload_button">Upload</string>
+	<string name="load_delete_button">Delete</string>
+
+	<!-- Strings for the Save Screen -->
+	<string name="save_title">Template Name</string>
+	<string name="save_composer">Composer or Artist</string>
+	<string name="save_creator">Creator</string>
+	<string name="save_description">Description</string>
+	<string name="save_bSave">Save</string>
+	<string name="save_bCancel">Cancel</string>
+	<string name="save_title_hint">Enter the name of the song</string>
+	<string name="save_composer_hint">Enter the name of the composer</string>
+	<string name="save_creator_hint">Enter your name</string>
+	<string name="save_description_hint">Enter any relevant information</string>
 
 </resources>

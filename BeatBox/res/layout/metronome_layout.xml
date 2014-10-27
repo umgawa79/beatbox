@@ -34,8 +34,8 @@
         android:id="@+id/play_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/mode_button"
-        android:layout_alignRight="@+id/mode_button"
+        android:layout_above="@id/mode_button"
+        android:layout_alignRight="@id/mode_button"
         android:layout_marginBottom="36dp"
         android:contentDescription="play"
         android:src="@drawable/play_button_default" />
@@ -45,7 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/inc_tempo_button"
-        android:layout_alignBottom="@+id/inc_tempo_button"
+        android:layout_alignBottom="@id/inc_tempo_button"
+        android:layout_above="@id/play_button"
         android:layout_centerHorizontal="true"
         android:text="@string/bpm_label" />
 
@@ -54,19 +55,21 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/bpm_text"
-        android:layout_alignBottom="@+id/bpm_text"
-        android:layout_toLeftOf="@+id/play_button"
+        android:layout_alignBaseline="@id/bpm_text"
+        android:layout_alignBottom="@id/bpm_text"
+        android:layout_toLeftOf="@id/bpm_text"
+        android:layout_above="@id/play_button"
         android:onClick="decTempo"
         android:text="@string/dec_tempo" />
 
     <Button
-        android:id="@+id/inc_tempo_button"
+        android:id="@id/inc_tempo_button"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/play_button"
+        android:layout_toRightOf="@id/bpm_text"
+        android:layout_above="@id/play_button"
         android:onClick="incTempo"
         android:text="@string/inc_tempo" />
 
