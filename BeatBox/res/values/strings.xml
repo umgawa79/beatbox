@@ -2,9 +2,14 @@
 <resources>
 
     <string name="app_name">BeatBox</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">Edit</string>
+    <string name="title_section2">Metronome</string>
+    <string name="title_section3">Load</string>
     <string name="action_settings">Settings</string>
+    <string name="mode_label">Template</string>
+    <string name="bpm_label">120 BPM</string>
+    <string name="inc_tempo">+</string>
+    <string name="dec_tempo">-</string>
+    <string name="song_title">Song Title</string>
 
 </resources>
