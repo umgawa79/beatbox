@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/save_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/save_title" />
+    
+    <EditText android:id="@+id/save_edit_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@id/save_title_text"
+        android:hint="@string/save_title_hint" />
+    
+    <TextView 
+        android:id="@+id/save_composer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_below="@id/save_edit_title"
+        android:text="@string/save_composer" />
+    
+    <EditText android:id="@+id/save_edit_composer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@id/save_composer_text"
+        android:hint="@string/save_composer_hint" />
+    
+    <TextView
+        android:id="@+id/save_description_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_below="@id/save_edit_composer"
+        android:text="@string/save_description" />
+    
+    <EditText android:id="@+id/save_edit_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+		android:layout_below="@id/save_description_text"
+		android:layout_marginBottom="15dp"
+        android:hint="@string/save_description_hint" />
+    
+    <TextView
+        android:id="@+id/save_creator_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_below="@id/save_edit_description"
+        android:text="@string/save_creator" />
+    
+    <EditText android:id="@+id/save_edit_creator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/save_creator_text"
+        android:layout_marginBottom="15dp"
+        android:hint="@string/save_creator_hint" />
+    
+    <View android:id="@+id/fakeView"
+       android:layout_width="0dp"
+       android:layout_height="0dp" 
+       android:layout_centerInParent="true"/>
+    
+    <Button
+        android:id="@+id/save_button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/fakeView"
+        android:text="@string/save_bSave"
+         />
+    
+    <Button
+        android:id="@+id/save_button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@id/fakeView"
+        android:text="@string/save_bCancel" />
+
+</RelativeLayout>
