@@ -10,8 +10,7 @@
     	android:layout_weight="5"
     	android:layout_height="wrap_content"
     	android:singleLine="true"
-    	android:gravity="left|bottom"
-    	 />
+    	android:gravity="left|bottom" />
     
     <ImageButton
         android:id="@+id/editButton"
