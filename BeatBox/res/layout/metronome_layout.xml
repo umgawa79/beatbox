@@ -20,6 +20,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:visibility="invisible"
         android:text="@string/song_title" />
 
     <Button
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/mode_label" />
+        android:text="@string/template_mode_label" />
 
     <ImageButton
         android:id="@+id/play_button"

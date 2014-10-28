@@ -10,20 +10,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener
 {
-	private Integer mTempo;
-
-    /**
+	/**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
@@ -31,23 +23,27 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
+    
 
+    /**
+     * Creates the UI
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //setContentView(R.layout.metronome_layout);
-
+        
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+        
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -77,21 +73,21 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
-        mTempo = new Integer(120);
-        //setTempo(mTempo);
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -101,133 +97,75 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
         return super.onOptionsItemSelected(item);
     }
+    
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // When the given tab is selected, switch to the corresponding page in
-        // the ViewPager.
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction)
+    {
+        // When the given tab is selected, switch to the corresponding page in the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
     }
+    
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
+    
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
     
     
-    public void decTempo()
-    {
-    	setTempo(mTempo--);
-    }
-    
-    
-    public void incTempo()
-    {
-    	setTempo(mTempo++);
-    }
-    
-    private void setTempo(int bpm)
-    {
-    	mTempo = bpm;
-    	String text = new String();
-    	text += mTempo.toString() + " BPM";
-    	PlaceholderFragment fragment = (PlaceholderFragment) mSectionsPagerAdapter.getItem(2);
-    	View metronome_view = fragment.getView();
-    	if(metronome_view != null)
-    	{
-    		TextView bpmText = (TextView) metronome_view.findViewById(R.id.bpm_text);
-    		if(bpmText != null)
-    			bpmText.setText(text);
-    		else
-    		{
-    			System.out.println("*** CAN'T FIND THE TEXTVIEW OBJECT ***");
-    		}
-    	}
-    	else
-    		System.out.println("*** CAN'T FIND THE METRONOME VIEW OBJECT ***");	
-    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter
+    {
+        public SectionsPagerAdapter(FragmentManager fm)
+        {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(int position)
+        {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            switch(position)
+            {
+    	        case 0: return new EditFragment();
+    	        case 1: return new MetronomeFragment();
+    	        case 2: return new LoadFragment();
+    	        default: break;
+            }
+            return null;
         }
 
+        
+        /**
+         * Returns the number of tabs
+         */
         @Override
-        public int getCount() {
-            // Show 3 total pages.
+        public int getCount()
+        {
             return 3;
         }
 
+        
+        /**
+         * Returns the title of the tab at a given position
+         */
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(int position)
+        {
             Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
+            switch (position)
+            {
+                case 0: return getString(R.string.title_edit).toUpperCase(l);
+                case 1: return getString(R.string.title_metronome).toUpperCase(l);
+                case 2: return getString(R.string.title_load).toUpperCase(l);
             }
             return null;
         }
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-    	
-    	//private View mView;
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.metronome_layout, container, false);
-            //mView = rootView;
-            return rootView;
-        }
-        
-        /*public View getView()
-        {
-        	return mView;
-        }*/
-        
-    }
-
 }

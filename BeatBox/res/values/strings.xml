@@ -2,11 +2,14 @@
 <resources>
 
     <string name="app_name">BeatBox</string>
-    <string name="title_section1">Edit</string>
-    <string name="title_section2">Metronome</string>
-    <string name="title_section3">Load</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_metronome">Metronome</string>
+    <string name="title_load">Load</string>
     <string name="action_settings">Settings</string>
-    <string name="mode_label">Template</string>
+    
+    <!-- Strings for the Metronome Screen -->
+    <string name="template_mode_label">Template</string>
+    <string name="basic_mode_label">Basic</string>
     <string name="bpm_label">120 BPM</string>
     <string name="inc_tempo">+</string>
     <string name="dec_tempo">-</string>
@@ -30,5 +33,6 @@
 	<string name="save_composer_hint">Enter the name of the composer</string>
 	<string name="save_creator_hint">Enter your name</string>
 	<string name="save_description_hint">Enter any relevant information</string>
+	
 
 </resources>
