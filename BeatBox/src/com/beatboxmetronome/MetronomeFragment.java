@@ -1,5 +1,6 @@
 package com.beatboxmetronome;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,11 +21,27 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	private Integer mTempo;
 	private enum MetronomeMode { BASIC, TEMPLATE };
 	private MetronomeMode mMode;
+	private MediaPlayer mMediaPlayer;
 	
 	public MetronomeFragment()
 	{
 		mTempo = new Integer(120);
 		mMode = MetronomeMode.BASIC;
+	}
+	
+	@Override
+	public void onResume()
+	{
+		mMediaPlayer = MediaPlayer.create(this.getActivity().getApplicationContext(), R.raw.snap);
+		super.onResume();
+	}
+	
+	
+	@Override
+	public void onPause()
+	{
+		mMediaPlayer.release();
+		super.onPause();
 	}
 	
 	
@@ -120,7 +137,21 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 */
 	private void play()
 	{
-		
+		if(mMediaPlayer != null)
+		{
+			for(int i = 0; i < 5; i++)
+			{
+				try
+				{
+					mMediaPlayer.start();
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 
