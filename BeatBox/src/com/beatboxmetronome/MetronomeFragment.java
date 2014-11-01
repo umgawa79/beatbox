@@ -1,17 +1,23 @@
 package com.beatboxmetronome;
 
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.lang.Runnable;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -145,21 +151,35 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 */
 	private void play()
 	{
-		if(mMediaPlayer != null)
-		{
-			for(int i = 0; i < 5; i++)
-			{
-				try
+		Runnable timelineplay = new Runnable(){
+			public void run(){
+				playTimeline();
+			}
+		};
+		
+		Runnable musicplay = new Runnable(){
+			public void run(){
+				if(mMediaPlayer != null)
 				{
-					mMediaPlayer.start();
-					Thread.sleep(1000);
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
+					for(int i = 0; i < 5; i++)
+					{
+						try
+						{
+							mMediaPlayer.start();
+							Thread.sleep(1000);
+						}
+						catch (InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+					}
 				}
 			}
-		}
+		};
+		
+		Executor timeline = Executors.newFixedThreadPool(1);
+		timeline.execute(new Thread(musicplay));
+		getActivity().runOnUiThread(timelineplay);
 	}
 
 
@@ -213,7 +233,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         ImageView tempo = new ImageView(getActivity());
         Random rand = new Random();       
    
-        for(int x=0;x<5;x++) {
+        for(int x=0;x<5;x++){
             Paint color = new Paint();
             color.setARGB(255, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
             canv.drawRect(x*100, 70, (x*100)+100, 0, color);                  
@@ -232,6 +252,35 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     {
     	LinearLayout tempoTimeline = (LinearLayout) v.findViewById(R.id.tempo_container);
     	tempoTimeline.removeAllViews();
+    }
+    
+    /**
+     * Plays the tempo timeline. 
+     * If the timeline reaches the end, moves the timeline to the start.
+     */
+    private void playTimeline()
+    {
+    	View v = this.getView();
+    	LinearLayout tempoContainer = (LinearLayout) v.findViewById(R.id.tempo_container);
+    	final HorizontalScrollView tempoTimeline = (HorizontalScrollView) v.findViewById(R.id.tempo_timeline);
+    	final int limit = tempoContainer.getWidth();
+    	//int limit = tempoTimeline.getWidth();
+    	//int tempoPosX = tempoTimeline.getScrollX();
+    	//int tempoPosY = tempoTimeline.getScrollY();
+    	new CountDownTimer(5000, 1)
+    	{          
+
+    		 public void onTick(long millisLeft)
+    		 {             
+    			 tempoTimeline.smoothScrollBy(1, 0);         
+    		 }          
+
+    		 public void onFinish()
+    		 {
+    			 tempoTimeline.scrollTo(0, 0);
+    		 }      
+
+    	}.start(); 
     }
 
 }
