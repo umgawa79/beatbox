@@ -20,8 +20,11 @@ public class Template implements Comparable<Template> {
 	private Vector<Integer> measures;
 	private Vector<Integer> timesigs;
 	
+	// TODO: implement delete for the load screen delete button, add Strings for save fields?
+	
 	public Template(File f)
 	{
+		Log.d("BeatBox", "Template constructor starting");
 		try {
 			loadTemplate(f);
 		}
@@ -31,30 +34,67 @@ public class Template implements Comparable<Template> {
 		}
 	}
 	
+	public Template()
+	{
+		initVectors();
+	}
+	
+	public void testTemplate() // Used to test loading and saving by LoadListFragment.
+	{
+		System.out.println("Making default template");
+		numEntries=2;
+		templateName = "TestSongName";
+		initVectors();
+		tempos.add(144); // TODO get rid of these after testing.
+		tempos.add(120);
+		measures.add(4);
+		measures.add(5);
+		timesigs.add(3);
+		timesigs.add(8);
+		try {
+			saveTemplate();
+			templateName = "SecondTestName";
+			saveTemplate();
+			}
+		catch(IOException e) {
+			e.printStackTrace();
+			System.out.println("failed to save");
+		}
+	}
+	
+	private void initVectors()
+	{
+		tempos = new Vector<Integer>();
+		timesigs = new Vector<Integer>();
+		measures = new Vector<Integer>();
+	}
+	
 	/*
 	 * This function should be called when a template is chosen on the load screen.
 	 * Can also be used for faking the online repository, but would need to load from a different directory.
 	 */
 	public void loadTemplate(File f) throws IOException
 	{
+		initVectors();
 		String line;
 		StringTokenizer st;
-		BufferedReader reader = new BufferedReader(new FileReader(f)); // TODO: Reading from correct directory?
+		BufferedReader reader = new BufferedReader(new FileReader(f));
 		
 		while ((line = reader.readLine()) != null)
 		{
 			st = new StringTokenizer(line);
 		    String s1 = st.nextToken();
-		    if (s1.equals("NAME")) {
+		    if (s1.equals("NAME:")) {
 		    	this.templateName = st.nextToken();
+		    	System.out.println("name " + templateName);
 		    }
-		    else if (s1.equals("TEMPO")) {
+		    else if (s1.equals("TEMPO:")) {
 		    	this.tempos.add(Integer.valueOf(st.nextToken()));
 		    }
-		    else if (s1.equals("TIMESIG")) {
+		    else if (s1.equals("TIMESIG:")) {
 		    	this.timesigs.add(Integer.valueOf(st.nextToken()));
 		    }
-		    else if (s1.equals("MEASURES")) {
+		    else if (s1.equals("MEASURES:")) {
 		    	this.measures.add(Integer.valueOf(st.nextToken()));
 		    	this.numEntries++; // IMPORTANT: We use MEASURES to signify the end of the current tempo's info.
 		    }
@@ -64,13 +104,14 @@ public class Template implements Comparable<Template> {
 	
 	public void saveTemplate() throws IOException
 	{
-		PrintWriter writer = new PrintWriter(new FileWriter("/templates/"+templateName+".tt"), true);
+		PrintWriter writer = new PrintWriter(new
+				FileWriter("/data/data/com.beatboxmetronome/files/"+templateName+".tt"), true);//TODO temp hardcode
 		writer.println("NAME: " + templateName);
 		for (int i = 0; i < numEntries; i++)
 		{
-			writer.println("TEMPO: " + tempos.elementAt(numEntries));
-			writer.println("TIMESIG: " + timesigs.elementAt(numEntries));
-			writer.println("MEASURES: " + measures.elementAt(numEntries));
+			writer.println("TEMPO: " + tempos.elementAt(i));
+			writer.println("TIMESIG: " + timesigs.elementAt(i));
+			writer.println("MEASURES: " + measures.elementAt(i));
 		}
 		writer.close();
 	}
@@ -87,7 +128,7 @@ public class Template implements Comparable<Template> {
 		return numEntries;
 	}
 	
-	public Vector<Integer> getTempoArray() // Do we want to do this? Encapsulation... depends how Metronome and Edit work.
+	public Vector<Integer> getTempoArray()
 	{
 		return tempos;
 	}
@@ -114,17 +155,17 @@ public class Template implements Comparable<Template> {
 	
 	public void setTemposVector(Vector<Integer> newTempos)
 	{
-		//TODO
+		tempos = newTempos;
 	}
 	
 	public void setTimesigsVector(Vector<Integer> newTimesigs)
 	{
-		//TODO
+		timesigs = newTimesigs;
 	}
 	
 	public void setMeasuresVector(Vector<Integer> newMeasures)
 	{
-		//TODO
+		measures = newMeasures;
 	}
 	
 	public int compareTo(Template other) // For sorting alphabetically by name on load screen

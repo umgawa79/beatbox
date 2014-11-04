@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants" >
     
-    <Button
-        android:text="@string/load_template_name"
-    	android:id="@+id/song_name_button"
-    	android:layout_width="0dp"
-    	android:layout_weight="5"
-    	android:layout_height="wrap_content"
-    	android:singleLine="true"
-    	android:gravity="left|bottom" />
-    
-    <ImageButton
+    <!-- Icons used in this file provided freely by icons8.com -->
+
+    <TextView
+        android:id="@+id/song_name_button"
+        android:textSize="18sp"
+        android:paddingLeft="3dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4.99"
+        android:gravity="left|center_vertical"
+        android:singleLine="true"
+        android:text="@string/load_template_name" />
+     
+     <ImageButton
         android:id="@+id/editButton"
         android:contentDescription="@string/load_edit_button"
     	android:layout_width="0dp"
     	android:layout_weight="1"
     	android:layout_height="wrap_content"
-   		android:src="@drawable/ic_launcher"
-    	android:background="@drawable/ic_launcher" />
+   		android:src="@drawable/ic_edit" />
     
     <ImageButton
         android:id="@+id/uploadButton"
@@ -27,16 +31,14 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher"
-        android:background="@drawable/ic_launcher" />
-    
+        android:src="@drawable/ic_upload" />
+        
     <ImageButton 
         android:id="@+id/deleteButton"
         android:contentDescription="@string/load_delete_button"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher"
-        android:background="@drawable/ic_launcher"/>
-    
+        android:src="@drawable/ic_delete" />
+        
 </LinearLayout>
