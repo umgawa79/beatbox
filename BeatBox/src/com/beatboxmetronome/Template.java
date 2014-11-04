@@ -15,12 +15,13 @@ import android.util.Log;
 public class Template implements Comparable<Template> {
 	
 	private String templateName;
+	private String description;
+	private String composer;
+	private String creator;
 	private int numEntries = 0;
 	private Vector<Integer> tempos;
 	private Vector<Integer> measures;
 	private Vector<Integer> timesigs;
-	
-	// TODO: implement delete for the load screen delete button, add Strings for save fields?
 	
 	public Template(File f)
 	{
@@ -116,6 +117,11 @@ public class Template implements Comparable<Template> {
 		writer.close();
 	}
 	
+	public void deleteTemplate()
+	{
+		// Remove the saved file.
+	}
+	
 	
 	
 	public String getTemplateName()
@@ -128,17 +134,32 @@ public class Template implements Comparable<Template> {
 		return numEntries;
 	}
 	
-	public Vector<Integer> getTempoArray()
+	public String getDescription()
+	{
+		return description;
+	}
+	
+	public String getComposer()
+	{
+		return composer;
+	}
+	
+	public String getCreator()
+	{
+		return creator;
+	}
+	
+	public Vector<Integer> getTempoVector()
 	{
 		return tempos;
 	}
 	
-	public Vector<Integer> getTimesigArray()
+	public Vector<Integer> getTimesigVector()
 	{
 		return timesigs;
 	}
 	
-	public Vector<Integer> getMeasuresArray()
+	public Vector<Integer> getMeasuresVector()
 	{
 		return measures;
 	}
@@ -166,6 +187,21 @@ public class Template implements Comparable<Template> {
 	public void setMeasuresVector(Vector<Integer> newMeasures)
 	{
 		measures = newMeasures;
+	}
+	
+	public void setDescription(String s)
+	{
+		description = s;
+	}
+	
+	public void setComposer(String s)
+	{
+		composer = s;
+	}
+	
+	public void setCreator(String s)
+	{
+		creator = s;
 	}
 	
 	public int compareTo(Template other) // For sorting alphabetically by name on load screen

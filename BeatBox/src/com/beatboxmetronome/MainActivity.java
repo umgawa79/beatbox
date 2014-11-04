@@ -29,6 +29,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private MetronomeFragment metroFrag;
 
     /*
      * Receives the position (maybe irrelevant) and template 
@@ -38,10 +39,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // The user selected the headline of an article from the HeadlinesFragment
         // Do something here to display that article
     	System.out.println("Just loaded template: "+t.getTemplateName());
-    	// Should set the tab to Metronome probably, update the displayed name,
-    	// and set the timeline/bpm/etc appropriately.
-    	// See "Deliver a Message to a Fragment section here:
-    	// https://developer.android.com/training/basics/fragments/communicating.html
+    	if (metroFrag == null) System.out.println("Error. MetronomeFragment is null.");
+    	else
+    	{
+    		//metroFrag.templateLoaded(t); // Something like that.
+    	}
+    	
+    	
+
     }
 
 
@@ -148,7 +153,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch(position)
             {
     	        case 0: return new EditFragment();
-    	        case 1: return new MetronomeFragment();
+    	        case 1: metroFrag = new MetronomeFragment(); return metroFrag;
     	        case 2: return new LoadListFragment();
     	        default: break;
             }
