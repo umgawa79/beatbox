@@ -1,8 +1,6 @@
 package com.beatboxmetronome;
 
 import java.util.Random;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.lang.Runnable;
 
 import android.graphics.Bitmap;
@@ -11,6 +9,7 @@ import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,17 +33,23 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	private enum MetronomeMode { BASIC, TEMPLATE };
 	private MetronomeMode mMode;
 	private MediaPlayer mMediaPlayer;
+	private TempoPlayer mTempoPlayer;
+	private Handler mHandler;
 	
 	public MetronomeFragment()
 	{
 		mTempo = new Integer(120);
 		mMode = MetronomeMode.BASIC;
+		mTempoPlayer = null;
+		mMediaPlayer = null;
 	}
 	
 	@Override
 	public void onResume()
 	{
 		mMediaPlayer = MediaPlayer.create(this.getActivity().getApplicationContext(), R.raw.snap);
+		mHandler = new Handler();
+		mTempoPlayer = new TempoPlayer(mMediaPlayer, mHandler);
 		super.onResume();
 	}
 	
@@ -53,6 +58,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	public void onPause()
 	{
 		mMediaPlayer.release();
+		mHandler = null;
+		mTempoPlayer = null;
 		super.onPause();
 	}
 	
@@ -72,6 +79,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         btn = (Button) fragView.findViewById(R.id.mode_button);
         btn.setOnClickListener(this);
         ImageButton iBtn = (ImageButton) fragView.findViewById(R.id.play_button);
+        iBtn.setOnClickListener(this);
+        iBtn = (ImageButton) fragView.findViewById(R.id.pause_button);
         iBtn.setOnClickListener(this);
         
         setTempo(mTempo);
@@ -98,6 +107,10 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		{
 			play();
 		}
+		else if(v.getId() == R.id.pause_button)
+		{
+			pause();
+		}
 		else if(v.getId() == R.id.mode_button)
 		{
 			switchModes();
@@ -115,7 +128,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	Button inc = (Button) v.findViewById(R.id.inc_tempo_button);
     	Button dec = (Button) v.findViewById(R.id.dec_tempo_button);
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
-    	if(modeButton != null && inc != null && dec != null && songTitle != null)
+    	View tempoTimeline = v.findViewById(R.id.tempo_timeline);
+    	if(modeButton != null && inc != null && dec != null && songTitle != null && tempoTimeline != null)
     	{
     		switch(mMode)
     		{
@@ -126,6 +140,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			inc.setVisibility(View.INVISIBLE);
 	    			dec.setVisibility(View.INVISIBLE);
 	    			songTitle.setVisibility(View.VISIBLE);
+	    			tempoTimeline.setVisibility(View.VISIBLE);
 	    			mMode = MetronomeMode.TEMPLATE;
 	    			break;
 	    		}
@@ -136,6 +151,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			inc.setVisibility(View.VISIBLE);
 	    			dec.setVisibility(View.VISIBLE);
 	    			songTitle.setVisibility(View.INVISIBLE);
+	    			tempoTimeline.setVisibility(View.INVISIBLE);
 	    			mMode = MetronomeMode.BASIC;
 	    			break;
 	    		}
@@ -151,35 +167,42 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 */
 	private void play()
 	{
-		Runnable timelineplay = new Runnable(){
+		View v = this.getView();
+		ImageButton playButton = (ImageButton) v.findViewById(R.id.play_button);
+		playButton.setVisibility(View.INVISIBLE);
+		ImageButton pauseButton = (ImageButton) v.findViewById(R.id.pause_button);
+		pauseButton.setVisibility(View.VISIBLE);
+		
+		
+		Runnable timelinePlayer = new Runnable(){
 			public void run(){
 				playTimeline();
 			}
 		};
 		
-		Runnable musicplay = new Runnable(){
-			public void run(){
-				if(mMediaPlayer != null)
-				{
-					for(int i = 0; i < 5; i++)
-					{
-						try
-						{
-							mMediaPlayer.start();
-							Thread.sleep(1000);
-						}
-						catch (InterruptedException e)
-						{
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		};
+		mTempoPlayer.setTempo(mTempo);
+		mHandler.post(mTempoPlayer);
 		
-		Executor timeline = Executors.newFixedThreadPool(1);
-		timeline.execute(new Thread(musicplay));
-		getActivity().runOnUiThread(timelineplay);
+		//Executor timeline = Executors.newFixedThreadPool(1);
+		//timeline.execute(new Thread(clickPlayer));
+		//Thread t = new Thread(clickPlayer);
+		//t.start();
+		getActivity().runOnUiThread(timelinePlayer);
+	}
+	
+	
+	/**
+	 * Pauses the metronome.
+	 */
+	private void pause()
+	{
+		View v = this.getView();
+		ImageButton playButton = (ImageButton) v.findViewById(R.id.play_button);
+		playButton.setVisibility(View.VISIBLE);
+		ImageButton pauseButton = (ImageButton) v.findViewById(R.id.pause_button);
+		pauseButton.setVisibility(View.INVISIBLE);
+		
+		mHandler.removeCallbacks(mTempoPlayer);
 	}
 
 
@@ -227,11 +250,13 @@ public class MetronomeFragment extends Fragment implements OnClickListener
      */
     private void drawTempo(View v)
     {
-    	LinearLayout tempoTimeline = (LinearLayout) v.findViewById(R.id.tempo_container);
+    	View tempoTimeline = v.findViewById(R.id.tempo_timeline);
+    	tempoTimeline.setVisibility(View.VISIBLE);
+    	LinearLayout tempoContainer = (LinearLayout) v.findViewById(R.id.tempo_container);
         Bitmap bmap = Bitmap.createBitmap(500, 70, Bitmap.Config.ARGB_8888); 
         Canvas canv = new Canvas(bmap);
         ImageView tempo = new ImageView(getActivity());
-        Random rand = new Random();       
+        Random rand = new Random();     
    
         for(int x=0;x<5;x++){
             Paint color = new Paint();
@@ -241,7 +266,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         
         tempo.setImageBitmap(bmap);
         tempo.setScaleType(ImageView.ScaleType.FIT_START);
-        tempoTimeline.addView(tempo);
+        tempoContainer.addView(tempo);
     }
     
     /**
@@ -250,8 +275,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
      */
     private void resetTempo(View v)
     {
-    	LinearLayout tempoTimeline = (LinearLayout) v.findViewById(R.id.tempo_container);
-    	tempoTimeline.removeAllViews();
+    	LinearLayout tempoContainer = (LinearLayout) v.findViewById(R.id.tempo_container);
+    	tempoContainer.removeAllViews();
     }
     
     /**
