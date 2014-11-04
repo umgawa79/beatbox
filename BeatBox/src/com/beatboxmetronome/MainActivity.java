@@ -13,7 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, LoadListFragment.OnTemplateSelectedListener
 {
 	/**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -29,7 +29,21 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    
+
+    /*
+     * Receives the position (maybe irrelevant) and template 
+     * that was selected from load list.
+     */
+    public void onTemplateSelected(int position, Template t) {
+        // The user selected the headline of an article from the HeadlinesFragment
+        // Do something here to display that article
+    	System.out.println("Just loaded template: "+t.getTemplateName());
+    	// Should set the tab to Metronome probably, update the displayed name,
+    	// and set the timeline/bpm/etc appropriately.
+    	// See "Deliver a Message to a Fragment section here:
+    	// https://developer.android.com/training/basics/fragments/communicating.html
+    }
+
 
     /**
      * Creates the UI
@@ -135,7 +149,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             {
     	        case 0: return new EditFragment();
     	        case 1: return new MetronomeFragment();
-    	        case 2: return new LoadFragment();
+    	        case 2: return new LoadListFragment();
     	        default: break;
             }
             return null;

@@ -1,8 +1,14 @@
 package com.beatboxmetronome;
 
 
-import android.app.ListFragment;
+import android.support.v4.app.ListFragment;
+
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,27 +21,55 @@ import java.util.List;
  */
 
 public class LoadListFragment extends ListFragment {
+	OnTemplateSelectedListener mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnTemplateSelectedListener {
+        public void onTemplateSelected(int position, Template t);
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnTemplateSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnTemplateSelectedListener in Main");
+        }
+    }
+
+
 	
 	private File currentDir; // This should be the directory we save our templates.
+    private FileArrayAdapter adapter;
+    private Context c;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		currentDir = new File("/templates/"); //TODO: Create this folder.
+		Log.d("BeatBox", "onCreate starting");
+		c = getActivity();
+		currentDir = c.getFilesDir(); //TODO: fix pathing.
+		System.out.println(currentDir.getAbsolutePath());
 		fill(currentDir);
+		Log.d("BeatBox", "onCreate finishing");
 	}
 	
 	private void fill(File f)
 	{
+		Template test = new Template();
+		test.testTemplate();
+		Log.d("BeatBox", "fill starting");
 		File[] savedTemplates = f.listFiles();
 		List<Template> templates = new ArrayList<Template>();
 		try{
 			for (File ff: savedTemplates)
 			{
-				// Here is where I will extract information from the .tt file.
-				// Something like this...
-				// templates.add(new Template(ff)); Passing in the file will call a constructor...
+				templates.add(new Template(ff));
 			}
 		}
 		catch(Exception e)
@@ -43,6 +77,24 @@ public class LoadListFragment extends ListFragment {
 			//nothing to do here
 		}
 		Collections.sort(templates);
+        adapter = new FileArrayAdapter(c,R.layout.fragment_load_bar,templates);
+        this.setListAdapter(adapter); 
+        Log.d("BeatBox", "fill finishing");
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id)
+	{
+		System.out.println("Item selected at position: "+position);
+		super.onListItemClick(l, v, position, id);
+		Template t = adapter.getItem(position);
+		onTemplateSelected(t);
+		mCallback.onTemplateSelected(position, t);
+	}
+	
+	public void onTemplateSelected(Template t)
+	{	// May need to delete this if I use mCallback
+		System.out.println("Here's where I'd send the template to other fragments.");
 	}
 	
 }
