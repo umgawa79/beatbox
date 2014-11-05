@@ -38,7 +38,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	
 	public MetronomeFragment()
 	{
-		mTempo = new Integer(120);
+		mTempo = Integer.valueOf(120);
 		mMode = MetronomeMode.BASIC;
 		mTempoPlayer = null;
 		mMediaPlayer = null;
@@ -307,5 +307,19 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 
     	}.start(); 
     }
-
+    
+    
+    /**
+     * Loads the Template into the metronome page, updating all the fields and preparing the page to play the Template.
+     */
+    public void load(Template t)
+    {
+    	if(mMode == MetronomeMode.BASIC)
+    		switchModes();
+    	setTempo(t.getTempoArray().firstElement().intValue());
+    	View v = this.getView();
+    	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
+    	songTitle.setText(t.getTemplateName().toCharArray(), 0, t.getTemplateName().length());
+    	//TODO draw the timeline
+    }
 }

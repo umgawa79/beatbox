@@ -42,6 +42,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     	// and set the timeline/bpm/etc appropriately.
     	// See "Deliver a Message to a Fragment section here:
     	// https://developer.android.com/training/basics/fragments/communicating.html
+    	this.getActionBar().setSelectedNavigationItem(1);
+    	FragmentManager fragMan = this.getSupportFragmentManager();
+    	MetronomeFragment metronome = (MetronomeFragment) fragMan.findFragmentById(R.id.metronome_layout);
+    	//metronome.load(t);
     }
 
 
@@ -87,6 +91,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+        this.getActionBar().setSelectedNavigationItem(1);
     }
 
 

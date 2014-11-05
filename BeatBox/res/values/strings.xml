@@ -33,6 +33,8 @@
 	<string name="save_composer_hint">Enter the name of the composer</string>
 	<string name="save_creator_hint">Enter your name</string>
 	<string name="save_description_hint">Enter any relevant information</string>
+	<string name="play_button_label">Play</string>
+	<string name="pause_button_label">Pause</string>
 	
 
 </resources>
