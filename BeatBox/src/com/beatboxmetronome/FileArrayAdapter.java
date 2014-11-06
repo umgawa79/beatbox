@@ -1,7 +1,10 @@
 package com.beatboxmetronome;
 
 import java.util.List; 
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View.OnClickListener;
 import android.view.View;
@@ -15,6 +18,7 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
 	private Context c;
     private int id;
     private List<Template>templates;
+    View toDel;
 	
 	public FileArrayAdapter(Context context, int textViewResourceId,
             List<Template> objects)
@@ -59,7 +63,23 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                         break;  
                     case R.id.deleteButton :
                         System.out.println("Delete button clicked at " + v.getTag());
-                        // Remove the template from the list... maybe make a delete function for templates.
+                        toDel = v;
+                        Template templateToDelete = templates.get((Integer)toDel.getTag());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                    	builder.setTitle("Delete "+templateToDelete.getTemplateName());
+                    	builder.setMessage("Are you sure?");
+                    	//.setIcon(android.R.drawable.ic_dialog_alert)
+                    	builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    	    public void onClick(DialogInterface dialog, int which) {			      	
+                    	    	//Yes button clicked, do something
+                    	    	Template templateToDelete = templates.get((Integer)toDel.getTag());
+                                templateToDelete.deleteTemplate();
+                                templates.remove(templateToDelete);
+                                notifyDataSetChanged();
+                    	    }
+                    	});
+                    	builder.setNegativeButton("No", null); //Do nothing on no
+                    	builder.show();
                         break; 
                     }
 

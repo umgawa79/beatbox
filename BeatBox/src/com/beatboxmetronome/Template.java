@@ -71,7 +71,7 @@ public class Template implements Comparable<Template> {
 	 * Can also be used for faking the online repository, but would need to load from a different directory.
 	 */
 	public void loadTemplate(File f) throws IOException
-	{
+	{	//TODO: Save and load description, composer, creator
 		initVectors();
 		String line;
 		StringTokenizer st;
@@ -115,7 +115,10 @@ public class Template implements Comparable<Template> {
 	
 	public void deleteTemplate()
 	{
-		// Remove the saved file.
+		File f = new File("/data/data/com.beatboxmetronome/files/"+templateName+".tt");
+		boolean deleted = f.delete();
+		if (!deleted) Log.e("BeatBox", "Failed to delete template file!");
+		else System.out.println("Deleted successfully");
 	}
 	
 	
