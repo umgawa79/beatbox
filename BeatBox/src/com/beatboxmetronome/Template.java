@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -19,9 +20,9 @@ public class Template implements Comparable<Template> {
 	private String composer;
 	private String creator;
 	private int numEntries = 0;
-	private Vector<Integer> tempos;
-	private Vector<Integer> measures;
-	private Vector<Integer> timesigs;
+	private Vector<Integer> tempos; //The sections of the template, each with its own tempo 
+	private Vector<Integer> measures; //The number of measures in section n
+	private Vector<Integer> timesigs; //The number of beats per measure in section n
 	
 	public Template(File f)
 	{
@@ -40,27 +41,22 @@ public class Template implements Comparable<Template> {
 		initVectors();
 	}
 	
-	public void testTemplate() // Used to test loading and saving by LoadListFragment.
+	public void testTemplate(String songTitle) // Used to test loading and saving by LoadListFragment.
 	{
 		System.out.println("Making default template");
-		numEntries=2;
-		templateName = "TestSongName";
+		numEntries=3;
+		templateName = songTitle;
 		initVectors();
-		tempos.add(144); // TODO get rid of these after testing.
-		tempos.add(120);
-		measures.add(4);
-		measures.add(5);
+		Random rand = new Random();
+		tempos.add(rand.nextInt(200)); // TODO get rid of these after testing.
+		tempos.add(rand.nextInt(200));
+		tempos.add(rand.nextInt(200));
+		measures.add(24);
+		measures.add(75);
+		measures.add(48);
 		timesigs.add(3);
-		timesigs.add(8);
-		try {
-			saveTemplate();
-			templateName = "SecondTestName";
-			saveTemplate();
-			}
-		catch(IOException e) {
-			e.printStackTrace();
-			System.out.println("failed to save");
-		}
+		timesigs.add(7);
+		timesigs.add(4);
 	}
 	
 	private void initVectors()

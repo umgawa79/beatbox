@@ -22,11 +22,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * @author Michael O'Sullivan
- * 
- * This fragment resides in the Metronome tab of the UI. It provides the basic and template capabilities of the mentronone.
- */
+/********************************************************************************************************************
+ * This fragment resides in the Metronome tab of the UI. It provides the Basic and Template capabilities of the mentronone.
+ *******************************************************************************************************************/
 public class MetronomeFragment extends Fragment implements OnClickListener
 {
 	private Integer mTempo;
@@ -35,7 +33,12 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	private MediaPlayer mMediaPlayer;
 	private TempoPlayer mTempoPlayer;
 	private Handler mHandler;
+	private Template curTemplate;
 	
+	
+	/******************************************************************************************************************
+	 * Creates a fragment with a default tempo of 120 bpm in the Basic mode
+	 *******************************************************************************************************************/
 	public MetronomeFragment()
 	{
 		mTempo = Integer.valueOf(120);
@@ -44,6 +47,10 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		mMediaPlayer = null;
 	}
 	
+	
+	/******************************************************************************************************************
+	 * Callback when the app is resumed
+	 ******************************************************************************************************************/
 	@Override
 	public void onResume()
 	{
@@ -54,6 +61,9 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	}
 	
 	
+	/******************************************************************************************************************
+	 * Callback when the app is paused
+	 ******************************************************************************************************************/
 	@Override
 	public void onPause()
 	{
@@ -64,9 +74,9 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	}
 	
 	
-	/**
+	/********************************************************************************************************************
 	 * Loads the layout from XML and displays the UI
-	 */
+	 *******************************************************************************************************************/
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -88,10 +98,11 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         return fragView;
     }
 
-	/**
+	
+	/********************************************************************************************************************
 	 * Callback for all button presses
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
-	 */
+	 *******************************************************************************************************************/
 	@Override
 	public void onClick(View v)
 	{
@@ -118,9 +129,9 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	}
 	
 	
-	/**
+	/********************************************************************************************************************
 	 * Switches between the basic and template modes of the fragment.
-	 */
+	 *******************************************************************************************************************/
 	private void switchModes()
 	{
 		View v = this.getView();
@@ -135,7 +146,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     		{
 	    		case BASIC:
 	    		{
-	    			drawTempo(v);
+	    			//drawTempoTimeline(curTemplate);
 	    			modeButton.setText(R.string.basic_mode_label);
 	    			inc.setVisibility(View.INVISIBLE);
 	    			dec.setVisibility(View.INVISIBLE);
@@ -146,7 +157,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    		}
 	    		case TEMPLATE:
 	    		{
-	    			resetTempo(v);
+	    			//resetTempoTimeline();
 	    			modeButton.setText(R.string.template_mode_label);
 	    			inc.setVisibility(View.VISIBLE);
 	    			dec.setVisibility(View.VISIBLE);
@@ -160,11 +171,11 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	}
 
 
-	/**
+	/********************************************************************************************************************
 	 * Plays the metronome.
 	 * When in the basic mode, plays an audible click at the tempo specified in the bpm field. When in template mode,
 	 * starts playing the template from its beginning.
-	 */
+	 *******************************************************************************************************************/
 	private void play()
 	{
 		View v = this.getView();
@@ -182,18 +193,13 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		
 		mTempoPlayer.setTempo(mTempo);
 		mHandler.post(mTempoPlayer);
-		
-		//Executor timeline = Executors.newFixedThreadPool(1);
-		//timeline.execute(new Thread(clickPlayer));
-		//Thread t = new Thread(clickPlayer);
-		//t.start();
 		getActivity().runOnUiThread(timelinePlayer);
 	}
 	
 	
-	/**
+	/********************************************************************************************************************
 	 * Pauses the metronome.
-	 */
+	 *******************************************************************************************************************/
 	private void pause()
 	{
 		View v = this.getView();
@@ -206,28 +212,28 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	}
 
 
-	/**
+	/********************************************************************************************************************
 	 * Decrements the tempo value.
-	 */
+	 *******************************************************************************************************************/
 	public void decTempo()
     {
     	setTempo(--mTempo);
     }
     
     
-	/**
+	/********************************************************************************************************************
 	 * Increments the tempo value.
-	 */
+	 *******************************************************************************************************************/
 	public void incTempo()
     {
     	setTempo(++mTempo);
     }
 	
     
-	/**
+	/********************************************************************************************************************
 	 * Updates the tempo value displayed by the TextView widget
 	 * @param bpm
-	 */
+	 *******************************************************************************************************************/
     private void setTempo(int bpm)
     {
     	View v = this.getView();
@@ -244,24 +250,30 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	}
     }
     
-    /**
+    /******************************************************************************************************************
      * Draws the tempo timeline
-     * @param View v
-     */
-    private void drawTempo(View v)
+     * @param v The parent of the fragment widgets
+     *******************************************************************************************************************/
+    private void drawTempoTimeline(Template aTemplate)
     {
-    	View tempoTimeline = v.findViewById(R.id.tempo_timeline);
-    	tempoTimeline.setVisibility(View.VISIBLE);
-    	LinearLayout tempoContainer = (LinearLayout) v.findViewById(R.id.tempo_container);
+    	//View tempoTimeline = this.getView().findViewById(R.id.tempo_timeline);
+    	LinearLayout tempoContainer = (LinearLayout) this.getView().findViewById(R.id.tempo_container);
         Bitmap bmap = Bitmap.createBitmap(500, 70, Bitmap.Config.ARGB_8888); 
         Canvas canv = new Canvas(bmap);
         ImageView tempo = new ImageView(getActivity());
-        Random rand = new Random();     
+        Random rand = new Random();
    
-        for(int x=0;x<5;x++){
-            Paint color = new Paint();
+        float left = 0.0f;
+        for(int i = 0; i < aTemplate.getTempoVector().size(); i++)
+        {
+            //set the color for this section
+        	Paint color = new Paint();
             color.setARGB(255, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
-            canv.drawRect(x*100, 70, (x*100)+100, 0, color);                  
+            
+            //draw the rectangle representing this section. The width of the rectangle is proportional to numMeasures*numBeatsPermeasure
+            float width = aTemplate.getMeasuresVector().elementAt(i) * aTemplate.getTimesigVector().elementAt(i) * 1.0f; //1 pixel per beat
+            canv.drawRect(left, 70, left + width, 0, color);
+            left += width;
         }               
         
         tempo.setImageBitmap(bmap);
@@ -269,20 +281,22 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         tempoContainer.addView(tempo);
     }
     
-    /**
+    
+    /********************************************************************************************************************
      * Resets the tempo timeline
-     * @param View v
-     */
-    private void resetTempo(View v)
+     * @param v The parent of the fragment widgets
+     *******************************************************************************************************************/
+    private void resetTempoTimeline()
     {
-    	LinearLayout tempoContainer = (LinearLayout) v.findViewById(R.id.tempo_container);
+    	LinearLayout tempoContainer = (LinearLayout) this.getView().findViewById(R.id.tempo_container);
     	tempoContainer.removeAllViews();
     }
     
-    /**
+    
+    /********************************************************************************************************************
      * Plays the tempo timeline. 
      * If the timeline reaches the end, moves the timeline to the start.
-     */
+     ********************************************************************************************************************/
     private void playTimeline()
     {
     	View v = this.getView();
@@ -309,17 +323,18 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     }
     
     
-    /**
+    /********************************************************************************************************************
      * Loads the Template into the metronome page, updating all the fields and preparing the page to play the Template.
-     */
-    public void load(Template t)
+     *******************************************************************************************************************/
+    public void load(Template aTemplate)
     {
+    	curTemplate = aTemplate;
     	if(mMode == MetronomeMode.BASIC)
     		switchModes();
-    	setTempo(t.getTempoArray().firstElement().intValue());
+    	setTempo(aTemplate.getTempoVector().firstElement().intValue());
     	View v = this.getView();
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
-    	songTitle.setText(t.getTemplateName().toCharArray(), 0, t.getTemplateName().length());
-    	//TODO draw the timeline
+    	songTitle.setText(aTemplate.getTemplateName().toCharArray(), 0, aTemplate.getTemplateName().length());
+    	this.drawTempoTimeline(aTemplate);
     }
 }

@@ -13,7 +13,7 @@
     <string name="bpm_label">120 BPM</string>
     <string name="inc_tempo">+</string>
     <string name="dec_tempo">-</string>
-    <string name="song_title">Song Title</string>
+    <string name="song_title"></string>
     
     <!-- Strings for the Load Screen -->
 	<string name="download_button">Download</string>

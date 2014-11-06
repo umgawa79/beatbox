@@ -29,8 +29,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private MetronomeFragment metroFrag;
-
+    
     /*
      * Receives the position (maybe irrelevant) and template 
      * that was selected from load list.
@@ -39,18 +38,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // The user selected the headline of an article from the HeadlinesFragment
         // Do something here to display that article
     	System.out.println("Just loaded template: "+t.getTemplateName());
-    	if (metroFrag == null) System.out.println("Error. MetronomeFragment is null.");
-    	else
+    	    	
+    	MetronomeFragment metronome = (MetronomeFragment) mSectionsPagerAdapter.instantiateItem(mViewPager, 1);
+    	if(metronome != null)
     	{
-    		//metroFrag.templateLoaded(t); // Something like that.
+    		metronome.load(t);
     	}
-    	
-    	
-
     	this.getActionBar().setSelectedNavigationItem(1);
-    	FragmentManager fragMan = this.getSupportFragmentManager();
-    	MetronomeFragment metronome = (MetronomeFragment) fragMan.findFragmentById(R.id.metronome_layout);
-    	//metronome.load(t);
     }
 
 
@@ -154,11 +148,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         public Fragment getItem(int position)
         {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             switch(position)
             {
     	        case 0: return new EditFragment();
-    	        case 1: metroFrag = new MetronomeFragment(); return metroFrag;
+    	        case 1: return new MetronomeFragment();
     	        case 2: return new LoadListFragment();
     	        default: break;
             }
