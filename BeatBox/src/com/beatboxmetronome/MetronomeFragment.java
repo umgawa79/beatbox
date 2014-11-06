@@ -316,7 +316,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     {
     	if(mMode == MetronomeMode.BASIC)
     		switchModes();
-    	setTempo(t.getTempoArray().firstElement().intValue());
+    	setTempo(t.getTempoVector().firstElement().intValue());
     	View v = this.getView();
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
     	songTitle.setText(t.getTemplateName().toCharArray(), 0, t.getTemplateName().length());
