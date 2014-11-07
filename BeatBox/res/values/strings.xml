@@ -36,5 +36,11 @@
 	<string name="play_button_label">Play</string>
 	<string name="pause_button_label">Pause</string>
 	
+	    <!-- Strings for the Edit Screen -->
+	<string name="editListTitle">Select Template to Edit</string>
+	<string name="createNewTemplate">Create New</string>
+	
+	
+	
 
 </resources>

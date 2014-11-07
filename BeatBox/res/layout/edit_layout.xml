@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <ToggleButton
-        android:id="@+id/toggleButton1"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/editListTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ToggleButton" />
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:gravity="center"
+        android:text="@string/editListTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <View
+		android:layout_width="fill_parent"
+		android:layout_height="2dp"
+		android:id="@+id/separator"
+		android:visibility="visible"
+		android:background="@android:color/darker_gray"/>
+
+    <ListView
+        android:id="@+id/editTemplatesList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </ListView>
+
+    <Button
+        android:id="@+id/createNewTemplateButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:text="@string/createNewTemplate" />
 
 </LinearLayout>
