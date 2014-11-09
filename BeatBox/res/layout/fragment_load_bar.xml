@@ -2,11 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:descendantFocusability="blocksDescendants" >
-    
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
     <!-- Icons used in this file provided freely by icons8.com -->
 
-    <TextView
+     <TextView
         android:id="@+id/song_name_button"
         android:textSize="18sp"
         android:paddingLeft="3dp"
@@ -40,5 +46,13 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_delete" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip" />
         
 </LinearLayout>

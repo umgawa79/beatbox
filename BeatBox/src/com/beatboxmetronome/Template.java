@@ -19,6 +19,7 @@ public class Template implements Comparable<Template> {
 	private String description;
 	private String composer;
 	private String creator;
+	private String endField = "18675421857205847205756"; // TODO: Think of a much better way to handle this.
 	private int numEntries = 0;
 	private Vector<Integer> tempos; //The sections of the template, each with its own tempo 
 	private Vector<Integer> measures; //The number of measures in section n
@@ -46,6 +47,9 @@ public class Template implements Comparable<Template> {
 		System.out.println("Making default template");
 		numEntries=3;
 		templateName = songTitle;
+		description = "Placeholder description.";
+		composer = "Unknown";
+		creator = "Anonymous";
 		initVectors();
 		Random rand = new Random();
 		tempos.add(rand.nextInt(200)); // TODO get rid of these after testing.
@@ -82,8 +86,53 @@ public class Template implements Comparable<Template> {
 			st = new StringTokenizer(line);
 		    String s1 = st.nextToken();
 		    if (s1.equals("NAME:")) {
-		    	this.templateName = st.nextToken();
-		    	System.out.println("name " + templateName);
+		    	s1 = st.nextToken();
+		    	templateName = s1; // The template name is the only required field.
+		    	while(st.hasMoreTokens())
+		    	{
+		    		s1 = st.nextToken();
+		    		if (!s1.equals(endField)) templateName = templateName+" "+s1;
+		    	}
+		    	System.out.println("name: " + templateName);
+		    }
+		    else if (s1.equals("CREATOR:")) {
+		    	s1 = st.nextToken();
+		    	if (!s1.equals(endField)) creator = s1;
+		    	else {
+		    		creator = "Anonymous";
+		    	}
+		    	while(st.hasMoreTokens())
+		    	{
+		    		s1 = st.nextToken();
+		    		if(!s1.equals(endField)) creator = creator+" "+s1;
+		    	}
+		    	System.out.println("creator: " + creator);
+		    }
+		    else if (s1.equals("COMPOSER:")) {
+		    	s1 = st.nextToken();
+		    	if (!s1.equals(endField)) composer = s1;
+		    	else {
+		    		composer = "Unknown";
+		    	}
+		    	while(st.hasMoreTokens())
+		    	{
+		    		s1 = st.nextToken();
+		    		if (!s1.equals(endField)) composer = composer+" "+s1;
+		    	}
+		    	System.out.println("composer: " + composer);
+		    }
+		    else if (s1.equals("DESCRIPTION:")) {
+		    	s1 = st.nextToken();
+		    	if (!s1.equals(endField)) description = s1;
+		    	else {
+		    		description = "No description available.";
+		    	}
+		    	while(st.hasMoreTokens())
+		    	{
+		    		s1 = st.nextToken();
+		    		if (!s1.equals(endField)) description = description+" "+s1;
+		    	}
+		    	System.out.println("description: " + description);
 		    }
 		    else if (s1.equals("TEMPO:")) {
 		    	this.tempos.add(Integer.valueOf(st.nextToken()));
@@ -103,7 +152,10 @@ public class Template implements Comparable<Template> {
 	{
 		PrintWriter writer = new PrintWriter(new
 				FileWriter("/data/data/com.beatboxmetronome/files/"+templateName+".tt"), true);//TODO temp hardcode
-		writer.println("NAME: " + templateName);
+		writer.println("NAME: " + templateName + " " + endField);
+		writer.println("CREATOR: " + creator + " " + endField);
+		writer.println("DESCRIPTION: " + description + " " + endField);
+		writer.println("COMPOSER: " + composer + " " + endField);
 		for (int i = 0; i < numEntries; i++)
 		{
 			writer.println("TEMPO: " + tempos.elementAt(i));
@@ -113,6 +165,16 @@ public class Template implements Comparable<Template> {
 		writer.close();
 	}
 	
+	public void uploadTemplate() throws IOException
+	{
+		// Save the local template to our online folder
+	}
+	
+	public void downloadTemplate() throws IOException
+	{
+		// Save the template from the online folder to our local folder
+	}
+	
 	public void deleteTemplate()
 	{
 		File f = new File("/data/data/com.beatboxmetronome/files/"+templateName+".tt");
@@ -120,8 +182,6 @@ public class Template implements Comparable<Template> {
 		if (!deleted) Log.e("BeatBox", "Failed to delete template file!");
 		else System.out.println("Deleted successfully");
 	}
-	
-	
 	
 	public String getTemplateName()
 	{

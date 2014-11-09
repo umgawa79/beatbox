@@ -108,21 +108,21 @@ public class EditFragment extends Fragment
         listView.setAdapter(adapter); 
         Log.d("BeatBox", "fill finishing");
 	}
-	/*
+	
 	public void onItemClick(ListView l, View v, int position, long id)
 	{
 		System.out.println("Item selected at position: "+position);
 		
 		Template t = adapter.getItem(position);
 		onTemplateSelected(t);
-		mCallback.onTemplateSelected(position, t);
+	//	mCallback.onTemplateSelected(position, t);
 	}
 	
 	public void onTemplateSelected(Template t)
 	{	// May need to delete this if I use mCallback
 		System.out.println("Here's where I'd send the template to other fragments.");
 	}
-	*/
+	
 	
 }
     

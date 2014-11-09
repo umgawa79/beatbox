@@ -1,32 +1,46 @@
 package com.beatboxmetronome;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List; 
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
 
 public class FileArrayAdapter extends ArrayAdapter<Template>
 {
 	private Context c;
     private int id;
     private List<Template>templates;
-    View toDel;
+    private List<ProgressBar>pbars;
+    private ProgressBar mPBar;
+    private Handler mHandler = new Handler();
+    private int mProgressStatus;
+    private boolean uploadInProgress = false;
+    private View toDel;
+    private Template toUpload;
 	
 	public FileArrayAdapter(Context context, int textViewResourceId,
             List<Template> objects)
 	{
         super(context, textViewResourceId, objects);
+		Log.e("BeatBox", "loadList onCreate!");
         c = context;
         id = textViewResourceId;
         templates = objects;
+        pbars = new ArrayList<ProgressBar>();
 	}
 	
 	public Template getTemplate(int i)
@@ -55,11 +69,54 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                     {
                     case R.id.editButton :
                         System.out.println("Edit button clicked at " + v.getTag());
-                        // can send templates<position> to edit screen here.
+                        ((MainActivity)c).sendTemplateToEdit(templates.get((Integer)v.getTag()));
                         break;
                     case R.id.uploadButton :
                         System.out.println("Upload button clicked at " + v.getTag());
-                        // Begin the upload process here...
+                        if (uploadInProgress) break; // Allow only 1 upload at a time since global variables required
+                        ProgressBar pb = pbars.get((Integer)v.getTag());
+                        if (pb.getVisibility()==View.VISIBLE)
+                        	{
+                        		// Once upload is done, allow progress bar to be hidden.
+                        		pb.setVisibility(View.GONE);
+                        		System.out.println("set it to gone");
+                        		break;
+                        	}
+                        else pb.setVisibility(View.VISIBLE);
+                        toUpload = templates.get((Integer)v.getTag());
+                        mPBar = pb;
+                        mProgressStatus = 0;
+                        uploadInProgress = true;
+                        new Thread(new Runnable() {
+                            public void run() {
+                                while (mProgressStatus < 100) {
+                                    mProgressStatus+=5;
+                                    try {
+                                    	Thread.sleep(100);
+                                    }
+                                    catch(InterruptedException e) {
+                                    	System.out.println("interuppted");
+                                    }
+                                    // Update the progress bar
+                                    mHandler.post(new Runnable() {
+                                        public void run() {
+                                            mPBar.setProgress(mProgressStatus);
+                                        }
+                                    });
+                                }
+                                try
+                        		{
+                        			toUpload.uploadTemplate();
+                        		}
+                        		catch(IOException e)
+                        		{
+                        			e.printStackTrace();
+                        			System.out.println("failed to upload");
+                        		}
+                                uploadInProgress = false;
+                            }
+                        }).start();
+                        System.out.println("end of upload button");
                         break;  
                     case R.id.deleteButton :
                         System.out.println("Delete button clicked at " + v.getTag());
@@ -75,6 +132,9 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                     	    	Template templateToDelete = templates.get((Integer)toDel.getTag());
                                 templateToDelete.deleteTemplate();
                                 templates.remove(templateToDelete);
+                                ProgressBar pb = pbars.get((Integer)toDel.getTag());
+                                pbars.remove(pb);
+                                pbars = new ArrayList<ProgressBar>();//reset to prevent adding errors
                                 notifyDataSetChanged();
                     	    }
                     	});
@@ -85,6 +145,7 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
 
                 }
             };
+            uploadInProgress = false;
             ImageButton edit = (ImageButton) v.findViewById(R.id.editButton);
             edit.setOnClickListener(mClickListener);
             edit.setTag(position);
@@ -94,6 +155,12 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
             ImageButton delete = (ImageButton) v.findViewById(R.id.deleteButton);
             delete.setOnClickListener(mClickListener);
             delete.setTag(position);
+            ProgressBar pb = (ProgressBar) v.findViewById(R.id.progressBar1);
+            if (pb.getVisibility()==View.VISIBLE && !pbars.contains(pb)) 
+            	{
+            		pb.setVisibility(View.GONE);
+            	}
+            if (!pbars.contains(pb)) pbars.add(pb);
         } 
         return v;
 	}
