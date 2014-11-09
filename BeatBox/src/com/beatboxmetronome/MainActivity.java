@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                invalidateOptionsMenu();
             }
         });
 
@@ -93,13 +94,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
         this.getActionBar().setSelectedNavigationItem(1);
     }
-
-
+    
+    private String downloadItemText = "Download";
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item  = menu.findItem(R.id.action_download);
+        item.setTitle(downloadItemText);
+        int tab = this.getActionBar().getSelectedNavigationIndex();
+        if (tab == 2) item.setVisible(true);
+        else item.setVisible(false);
         return true;
     }
     
@@ -116,7 +123,20 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_download) {
+        	//TODO send a callback to the loadlistfragment, tell it to switch the list to downloads view.
+        	// Also change the download text to say local
+        	if (item.getTitle().equals("Download"))
+        		{
+        			item.setTitle("Local");
+        			downloadItemText = "Local";
+        			//
+        		}
+        	else {
+        		item.setTitle("Download");
+        		downloadItemText = "Download";
+        	}
+        	//need to redraw actionbar here too.
             return true;
         }
         return super.onOptionsItemSelected(item);

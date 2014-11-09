@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * This file and the entire load function is heavily based on this tutorial: 
@@ -42,8 +44,6 @@ public class LoadListFragment extends ListFragment {
         }
     }
 
-
-	
 	private File currentDir; // This should be the directory we save our templates.
     private FileArrayAdapter adapter;
     private Context c;
@@ -117,6 +117,11 @@ public class LoadListFragment extends ListFragment {
 		Template t = adapter.getItem(position);
 		onTemplateSelected(t);
 		mCallback.onTemplateSelected(position, t);
+	}
+	
+	public void switchMode(String s)
+	{
+		
 	}
 	
 	public void onTemplateSelected(Template t)
