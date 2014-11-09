@@ -52,12 +52,27 @@ public class LoadListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		Log.d("BeatBox", "onCreate starting");
+		Log.d("BeatBox", "onCreate starting LOADLIST");
 		c = getActivity();
 		currentDir = c.getFilesDir(); //TODO: fix pathing.
 		System.out.println(currentDir.getAbsolutePath());
 		fill(currentDir);
 		Log.d("BeatBox", "onCreate finishing");
+		return;
+	}
+	
+	@Override
+	public void onResume()
+	{
+		Log.e("BeatBox", "Load Resume!");
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause()
+	{
+		Log.e("BeatBox", "Load Pause!");
+		super.onPause();
 	}
 	
 	private void fill(File f)
@@ -65,9 +80,9 @@ public class LoadListFragment extends ListFragment {
 		try
 		{
 			Template test = new Template();
-			test.testTemplate("TestSongName");
+			test.testTemplate("Test Song Name");
 			test.saveTemplate();
-			test.testTemplate("SecondTestName");
+			test.testTemplate("Second Test Name");
 			test.saveTemplate();
 		}
 		catch(IOException e)

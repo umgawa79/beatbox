@@ -67,6 +67,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // When swiping between different sections, select the corresponding
@@ -102,6 +103,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         return true;
     }
     
+    public void sendTemplateToEdit(Template t)
+    {
+    	// Do similar commands like when template sent to metronome fragment
+    	System.out.println("Send template to edit");
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
