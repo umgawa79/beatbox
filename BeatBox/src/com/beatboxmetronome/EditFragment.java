@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 
@@ -25,15 +27,17 @@ import android.widget.ListView;
  * @author Michael O'Sullivan
  *
  */
-public class EditFragment extends ListFragment
+public class EditFragment extends Fragment
 {
-	//ListView listView;
+	ListView listView;
 	//OnTemplateSelectedListener mCallback;
 	private File currentDir; // This should be the directory we save our templates.
     private EditTabArrayAdapter adapter;
     private TempoSectionsAdapter tsAdapter;
     private Context c;
     private boolean templateView = true;
+    
+    View curView;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -42,16 +46,34 @@ public class EditFragment extends ListFragment
 		
         View fragView = inflater.inflate(R.layout.edit_layout, container, false);
         
-        //listView = (ListView) fragView.findViewById(R.id.list);
-
+        listView = (ListView) fragView.findViewById(R.id.templateList);
 		Log.d("BeatBox", "onCreate starting");
 		c = getActivity();
 		currentDir = c.getFilesDir(); //TODO: fix pathing.
 		System.out.println(currentDir.getAbsolutePath());
 		fill(currentDir);
 		Log.d("BeatBox", "onCreate finishing");
+		curView = fragView;
 		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+		   @Override
+		   public void onItemClick(AdapterView<?> a, View view, int position, long arg)
+				{
+					if (templateView)
+					{
+						System.out.println("Item selected at position: "+position);
+						Template t = adapter.getItem(position);
+						onTemplateSelected(t);
+						templateView = false;
+					}
+					else
+					{
+						System.out.println("Item clicked in edit mode at position: " + position);
+					}
+				} 
+		});
 		return fragView;
+	
 	}
 	
 	private void fill(File f)
@@ -84,10 +106,11 @@ public class EditFragment extends ListFragment
 		}
 		Collections.sort(templates);
         adapter = new EditTabArrayAdapter(c,R.layout.fragment_edit_bar,templates);
-        this.setListAdapter(adapter); 
+        listView.setAdapter(adapter); 
         Log.d("BeatBox", "fill finishing");
 	}
 	
+	/*
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
@@ -103,6 +126,8 @@ public class EditFragment extends ListFragment
 			System.out.println("Item clicked in edit mode at position: " + position);
 		}
 	}
+	*/
+	
 	
 	public void onTemplateSelected(Template t)
 	{	// May need to delete this if I use mCallback
@@ -117,9 +142,31 @@ public class EditFragment extends ListFragment
 			row.add(t.getTimesigVector().elementAt(i));
 			sections.add(row);
 		}
+		
+		ViewGroup parent = (ViewGroup) curView.getParent();
+	    int index = parent.indexOfChild(curView);
+	    parent.removeView(curView);
+	    LayoutInflater inflater = LayoutInflater.from(c);
+	    curView = inflater.inflate(R.layout.fragment_create_layout, parent, false);
+	    parent.addView(curView, index);
+	    
+        listView = (ListView) curView.findViewById(R.id.sectionList);
+        
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			   @Override
+			   public void onItemClick(AdapterView<?> a, View view, int position, long arg)
+					{
+						
+						System.out.println("Item clicked in edit mode at position: " + position + ". Can you believe it?!");
+					} 
+			});
+	    
+	    
 		tsAdapter = new TempoSectionsAdapter(c,R.layout.temposectionbar,sections);
-		this.setListAdapter(tsAdapter);
+		listView.setAdapter(tsAdapter);
 		//maybe invalidate and redraw here, replace view
+		
+		tsAdapter.notifyDataSetChanged();
 	}
 	
 	
