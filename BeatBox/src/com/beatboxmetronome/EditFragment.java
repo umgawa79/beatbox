@@ -1,5 +1,6 @@
 package com.beatboxmetronome;
 
+import android.support.v4.app.ListFragment;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,16 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+
 /**
  * @author Michael O'Sullivan
  *
  */
-public class EditFragment extends Fragment
+public class EditFragment extends ListFragment
 {
-	ListView listView;
+	//ListView listView;
 	//OnTemplateSelectedListener mCallback;
 	private File currentDir; // This should be the directory we save our templates.
-    private FileArrayAdapter adapter;
+    private EditTabArrayAdapter adapter;
     private Context c;
 
     
@@ -63,7 +65,7 @@ public class EditFragment extends Fragment
 		
         View fragView = inflater.inflate(R.layout.edit_layout, container, false);
         
-        listView = (ListView) fragView.findViewById(R.id.editTemplatesList);
+        //listView = (ListView) fragView.findViewById(R.id.list);
 
 		Log.d("BeatBox", "onCreate starting");
 		c = getActivity();
@@ -104,8 +106,8 @@ public class EditFragment extends Fragment
 			//nothing to do here
 		}
 		Collections.sort(templates);
-        adapter = new FileArrayAdapter(c,R.layout.fragment_load_bar,templates);
-        listView.setAdapter(adapter); 
+        adapter = new EditTabArrayAdapter(c,R.layout.fragment_edit_bar,templates);
+        this.setListAdapter(adapter); 
         Log.d("BeatBox", "fill finishing");
 	}
 	
