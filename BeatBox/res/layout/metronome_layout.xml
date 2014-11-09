@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:textSize="30dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20sp"
         android:text="@string/song_title"
         android:visibility="invisible" />
 
@@ -23,12 +23,15 @@
         android:background="@drawable/border"
         android:scrollbars="none"
         android:visibility="invisible"
-        android:layout_marginBottom="30dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp">
         <LinearLayout
             android:id="@+id/tempo_container"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">       
+            android:layout_height="70dp">
+            <!-- android:layout_height="match_parent"-->
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -37,15 +40,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="50dp">
+        android:gravity="center">
+        <!-- android:layout_marginBottom="50dp" -->
 
         <Button
             android:id="@+id/dec_tempo_button"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
+            android:textSize="20sp"
             android:onClick="decTempo"
             android:text="@string/dec_tempo" />
 
@@ -55,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:textSize="25dp"
+            android:textSize="20sp"
             android:text="@string/bpm_label" />
 
         <Button
@@ -63,7 +66,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
+            android:textSize="20sp"
             android:onClick="incTempo"
             android:text="@string/inc_tempo" />
     </LinearLayout>
@@ -71,8 +74,8 @@
     <FrameLayout
         android:id="@+id/play_button_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp">
+        android:layout_height="wrap_content">
+        <!--android:layout_marginBottom="30dp"-->
 
         <ImageButton
             android:id="@+id/play_button"

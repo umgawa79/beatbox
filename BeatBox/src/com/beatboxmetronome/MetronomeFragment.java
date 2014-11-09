@@ -1,6 +1,7 @@
 package com.beatboxmetronome;
 
 import java.util.Random;
+import java.util.Vector;
 import java.lang.Runnable;
 
 import android.graphics.Bitmap;
@@ -256,23 +257,46 @@ public class MetronomeFragment extends Fragment implements OnClickListener
      *******************************************************************************************************************/
     private void drawTempoTimeline(Template aTemplate)
     {
-    	//View tempoTimeline = this.getView().findViewById(R.id.tempo_timeline);
     	LinearLayout tempoContainer = (LinearLayout) this.getView().findViewById(R.id.tempo_container);
-        Bitmap bmap = Bitmap.createBitmap(500, 70, Bitmap.Config.ARGB_8888); 
+    	
+    	Vector<Integer> measureVector = aTemplate.getMeasuresVector();
+    	Vector<Integer> timesigVector = aTemplate.getTimesigVector();
+    	Vector<Integer> tempoVector = aTemplate.getTempoVector();
+    	
+    	//get the length of the timeline by adding all the measure * timesig
+    	int bmapSize = 0;
+    	for(int i=0; i < measureVector.size(); i++){
+    		bmapSize += measureVector.elementAt(i) * timesigVector.elementAt(i);
+    	}
+    	
+        Bitmap bmap = Bitmap.createBitmap(bmapSize, 70, Bitmap.Config.ARGB_8888); 
         Canvas canv = new Canvas(bmap);
         ImageView tempo = new ImageView(getActivity());
-        Random rand = new Random();
    
         float left = 0.0f;
-        for(int i = 0; i < aTemplate.getTempoVector().size(); i++)
+        double blue = 0.0;
+        double green = 0.0;
+        
+        for(int i = 0; i < measureVector.size(); i++)
         {
+        	//Set different color depending on the tempo. The default color is blue.
+        	//Faster tempo has more green which will have brighter color.
+        	int tempoVal = tempoVector.elementAt(i);
+        	green = Math.ceil((tempoVal/20.0)*25);
+        	blue = Math.ceil((tempoVal/20.0)*25)+50;
+        	
+        	if(blue > 255.0){
+        		blue = 255.0;
+        	}
+        	
             //set the color for this section
         	Paint color = new Paint();
-            color.setARGB(255, rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+            color.setARGB(255, 0, (int)green, (int)blue);
             
             //draw the rectangle representing this section. The width of the rectangle is proportional to numMeasures*numBeatsPermeasure
-            float width = aTemplate.getMeasuresVector().elementAt(i) * aTemplate.getTimesigVector().elementAt(i) * 1.0f; //1 pixel per beat
-            canv.drawRect(left, 70, left + width, 0, color);
+            float width = measureVector.elementAt(i) * timesigVector.elementAt(i) * 1.0f; //1 pixel per beat
+            canv.drawRect(left, 70, left+width, 0, color);
+            
             left += width;
         }               
         
@@ -303,10 +327,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	LinearLayout tempoContainer = (LinearLayout) v.findViewById(R.id.tempo_container);
     	final HorizontalScrollView tempoTimeline = (HorizontalScrollView) v.findViewById(R.id.tempo_timeline);
     	final int limit = tempoContainer.getWidth();
-    	//int limit = tempoTimeline.getWidth();
-    	//int tempoPosX = tempoTimeline.getScrollX();
-    	//int tempoPosY = tempoTimeline.getScrollY();
-    	new CountDownTimer(5000, 1)
+    	new CountDownTimer((limit*14)-1200, 1)
     	{          
 
     		 public void onTick(long millisLeft)
@@ -335,6 +356,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	View v = this.getView();
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
     	songTitle.setText(aTemplate.getTemplateName().toCharArray(), 0, aTemplate.getTemplateName().length());
+    	this.resetTempoTimeline();
     	this.drawTempoTimeline(aTemplate);
     }
 }
