@@ -33,7 +33,7 @@ public class Template implements Comparable<Template> {
 		}
 		catch(IOException e) {
 			Log.e("BeatBox Error","Failed to load template.");
-			System.out.println("Error to load!");
+			System.out.println("Error to load! at " + f);
 		}
 	}
 	
@@ -151,7 +151,7 @@ public class Template implements Comparable<Template> {
 	public void saveTemplate() throws IOException
 	{
 		PrintWriter writer = new PrintWriter(new
-				FileWriter("/data/data/com.beatboxmetronome/files/"+templateName+".tt"), true);//TODO temp hardcode
+				FileWriter("/data/data/com.beatboxmetronome/files/local/"+templateName+".tt"), true);//TODO temp hardcode
 		writer.println("NAME: " + templateName + " " + endField);
 		writer.println("CREATOR: " + creator + " " + endField);
 		writer.println("DESCRIPTION: " + description + " " + endField);
@@ -167,12 +167,36 @@ public class Template implements Comparable<Template> {
 	
 	public void uploadTemplate() throws IOException
 	{
-		// Save the local template to our online folder
+		PrintWriter writer = new PrintWriter(new
+				FileWriter("/data/data/com.beatboxmetronome/files/online/"+templateName+".tt"), true);//TODO temp hardcode
+		writer.println("NAME: " + templateName + " " + endField);
+		writer.println("CREATOR: " + creator + " " + endField);
+		writer.println("DESCRIPTION: " + description + " " + endField);
+		writer.println("COMPOSER: " + composer + " " + endField);
+		for (int i = 0; i < numEntries; i++)
+		{
+			writer.println("TEMPO: " + tempos.elementAt(i));
+			writer.println("TIMESIG: " + timesigs.elementAt(i));
+			writer.println("MEASURES: " + measures.elementAt(i));
+		}
+		writer.close();
 	}
 	
 	public void downloadTemplate() throws IOException
 	{
-		// Save the template from the online folder to our local folder
+		PrintWriter writer = new PrintWriter(new
+				FileWriter("/data/data/com.beatboxmetronome/files/local/"+templateName+".tt"), true);//TODO temp hardcode
+		writer.println("NAME: " + templateName + " " + endField);
+		writer.println("CREATOR: " + creator + " " + endField);
+		writer.println("DESCRIPTION: " + description + " " + endField);
+		writer.println("COMPOSER: " + composer + " " + endField);
+		for (int i = 0; i < numEntries; i++)
+		{
+			writer.println("TEMPO: " + tempos.elementAt(i));
+			writer.println("TIMESIG: " + timesigs.elementAt(i));
+			writer.println("MEASURES: " + measures.elementAt(i));
+		}
+		writer.close();
 	}
 	
 	public void deleteTemplate()

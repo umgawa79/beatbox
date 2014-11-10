@@ -31,12 +31,13 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
     private boolean uploadInProgress = false;
     private View toDel;
     private Template toUpload;
+    private boolean localList;
 	
 	public FileArrayAdapter(Context context, int textViewResourceId,
             List<Template> objects)
 	{
         super(context, textViewResourceId, objects);
-		Log.e("BeatBox", "loadList onCreate!");
+		Log.d("BeatBox", "FileArrayAdapter create!");
         c = context;
         id = textViewResourceId;
         templates = objects;
@@ -46,6 +47,14 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
 	public Template getTemplate(int i)
 	{
 		return templates.get(i);
+	}
+	
+	public void switchMode(String s)
+	{
+		System.out.println("FileArray Switch Mode called with " + s);
+		if (s.equals("Download")) localList = true;
+		else localList = false;
+		if (localList == false) System.out.println("localList set to false");
 	}
 	
 	@Override
@@ -106,7 +115,15 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                                 }
                                 try
                         		{
-                        			toUpload.uploadTemplate();
+                                	if (localList) {
+                                		System.out.println("Uploading!");
+                                		toUpload.uploadTemplate();
+                                		// TODO: Need to notify edit screen to update its list...
+                                	}
+                                	else {
+                                		System.out.println("Downloading!");
+                                		toUpload.downloadTemplate();
+                                	}
                         		}
                         		catch(IOException e)
                         		{
@@ -149,13 +166,23 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
             ImageButton edit = (ImageButton) v.findViewById(R.id.editButton);
             edit.setOnClickListener(mClickListener);
             edit.setTag(position);
+            edit.setVisibility(View.VISIBLE);
             ImageButton upload = (ImageButton) v.findViewById(R.id.uploadButton);
+            upload.setImageResource(R.drawable.ic_upload);
             upload.setOnClickListener(mClickListener);
             upload.setTag(position);
             ImageButton delete = (ImageButton) v.findViewById(R.id.deleteButton);
             delete.setOnClickListener(mClickListener);
             delete.setTag(position);
+            delete.setVisibility(View.VISIBLE);
             ProgressBar pb = (ProgressBar) v.findViewById(R.id.progressBar1);
+            if (localList == false) 
+            {
+            	System.out.println("getView localList is false");
+            	upload.setImageResource(R.drawable.ic_download); // trick for now is to just reuse upload
+            	edit.setVisibility(View.GONE);
+            	delete.setVisibility(View.GONE);
+            }
             if (pb.getVisibility()==View.VISIBLE && !pbars.contains(pb)) 
             	{
             		pb.setVisibility(View.GONE);

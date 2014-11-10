@@ -7,16 +7,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * This file and the entire load function is heavily based on this tutorial: 
@@ -47,6 +44,7 @@ public class LoadListFragment extends ListFragment {
 	private File currentDir; // This should be the directory we save our templates.
     private FileArrayAdapter adapter;
     private Context c;
+    private boolean localList = true;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -54,7 +52,22 @@ public class LoadListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		Log.d("BeatBox", "onCreate starting LOADLIST");
 		c = getActivity();
-		currentDir = c.getFilesDir(); //TODO: fix pathing.
+		currentDir = c.getFilesDir();
+		File localDir = new File(currentDir + "/local/"); // TODO put this code in editFragment or main.
+		boolean success = true;
+		if (!localDir.exists()) success = localDir.mkdir();
+		if (!success)
+		{
+			Log.e("BeatBox", "Local folder could not be created!");
+		}
+		success = true;
+		File onlineDir = new File(currentDir + "/online/");
+		if (!onlineDir.exists()) success = onlineDir.mkdir();
+		if (!success)
+		{
+			Log.e("BeatBox", "Online folder could not be created!");
+		}
+		currentDir = localDir; // By default we populate the local list first.
 		System.out.println(currentDir.getAbsolutePath());
 		fill(currentDir);
 		Log.d("BeatBox", "onCreate finishing");
@@ -77,19 +90,6 @@ public class LoadListFragment extends ListFragment {
 	
 	private void fill(File f)
 	{
-		try
-		{
-			Template test = new Template();
-			test.testTemplate("Test Song Name");
-			test.saveTemplate();
-			test.testTemplate("Second Test Name");
-			test.saveTemplate();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-			System.out.println("failed to save");
-		}
 		Log.d("BeatBox", "fill starting");
 		File[] savedTemplates = f.listFiles();
 		List<Template> templates = new ArrayList<Template>();
@@ -105,6 +105,8 @@ public class LoadListFragment extends ListFragment {
 		}
 		Collections.sort(templates);
         adapter = new FileArrayAdapter(c,R.layout.fragment_load_bar,templates);
+        if (localList) adapter.switchMode("Download");
+        else adapter.switchMode("Local");
         this.setListAdapter(adapter); 
         Log.d("BeatBox", "fill finishing");
 	}
@@ -112,16 +114,37 @@ public class LoadListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
-		System.out.println("Item selected at position: "+position);
-		super.onListItemClick(l, v, position, id);
-		Template t = adapter.getItem(position);
-		onTemplateSelected(t);
-		mCallback.onTemplateSelected(position, t);
+		if (localList)
+		{
+			System.out.println("Item selected at position: "+position);
+			super.onListItemClick(l, v, position, id);
+			Template t = adapter.getItem(position);
+			onTemplateSelected(t);
+			mCallback.onTemplateSelected(position, t);
+		}
+		else // online list. If a row is clicked what do we do?
+		{
+			// Maybe in a future version I would display information like description, composer, etc
+		}
 	}
 	
 	public void switchMode(String s)
 	{
-		
+		System.out.println("SwitchMode Entered. String is " + s);
+		if (s.equals("Local")) // We want to switch to the online list.
+		{
+			System.out.println("switching to " + s + " list");
+			currentDir = new File(c.getFilesDir()+"/online/");
+			localList = false;
+			fill(currentDir);
+		}
+		else //s == Download, switch to the local list.
+		{
+			System.out.println("switching to " + s + " list");
+			currentDir = new File(c.getFilesDir()+"/local/");//TODO Check if worked.
+			localList = true;
+			fill(currentDir);
+		}
 	}
 	
 	public void onTemplateSelected(Template t)

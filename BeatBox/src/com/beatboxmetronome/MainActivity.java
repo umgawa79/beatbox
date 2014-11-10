@@ -1,5 +1,6 @@
 package com.beatboxmetronome;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import android.support.v7.app.ActionBarActivity;
@@ -57,6 +58,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        // Save a few test templates, to be removed in the final version.
+        try
+		{
+			Template test = new Template();
+			test.testTemplate("Test Song Name");
+			test.saveTemplate();
+			test.testTemplate("Second Test Name");
+			test.saveTemplate();
+			test.testTemplate("online name one");
+			test.uploadTemplate();
+			test.testTemplate("online template two");
+			test.uploadTemplate();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			android.util.Log.e("BeatBox", "Failed to create test templates.");
+		}
+        
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -96,6 +116,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
     
     private String downloadItemText = "Download";
+    private LoadListFragment loadFrag;
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -115,7 +136,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     	// Do similar commands like when template sent to metronome fragment
     	System.out.println("Send template to edit");
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -127,14 +148,18 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         	//TODO send a callback to the loadlistfragment, tell it to switch the list to downloads view.
         	// Also change the download text to say local
         	if (item.getTitle().equals("Download"))
-        		{
+        	{
         			item.setTitle("Local");
         			downloadItemText = "Local";
-        			//
-        		}
-        	else {
+        			System.out.println("Calling switchmode local...");
+        			loadFrag.switchMode("Local");
+        	}
+        	else
+        	{
         		item.setTitle("Download");
         		downloadItemText = "Download";
+        		System.out.println("Calling switchmode download...");
+        		loadFrag.switchMode("Download");
         	}
         	//need to redraw actionbar here too.
             return true;
@@ -178,7 +203,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             {
     	        case 0: return new EditFragment();
     	        case 1: return new MetronomeFragment();
-    	        case 2: return new LoadListFragment();
+    	        case 2: return loadFrag = new LoadListFragment();
     	        default: break;
             }
             return null;
