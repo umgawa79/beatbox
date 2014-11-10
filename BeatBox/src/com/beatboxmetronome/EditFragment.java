@@ -20,8 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Button;
 
 
 /**
@@ -130,16 +132,19 @@ public class EditFragment extends Fragment
 	*/
 	
 	
+	
 	public void onTemplateSelected(Template t)
 	{	// May need to delete this if I use mCallback
 		System.out.println("Here's where I'd send the template to other fragments.");
-		List<Vector> sections = new ArrayList<Vector>();
+		final List<Vector> sections = new ArrayList<Vector>();
 		int size = t.getNumEntries();
+		final Vector<Integer> tempoVector = t.getTempoVector();
+		final Vector<Integer> measuresVector = t.getMeasuresVector();
 		for (int i = 0; i < size; i++)
 		{
 			Vector<Integer> row = new Vector<Integer>();
-			row.add(t.getTempoVector().elementAt(i));
-			row.add(t.getMeasuresVector().elementAt(i));
+			row.add(tempoVector.elementAt(i));
+			row.add(measuresVector.elementAt(i));
 			row.add(t.getTimesigVector().elementAt(i));
 			sections.add(row);
 		}
@@ -152,15 +157,79 @@ public class EditFragment extends Fragment
 	    parent.addView(curView, index);
 	    
         listView = (ListView) curView.findViewById(R.id.sectionList);
+    
         
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			   @Override
-			   public void onItemClick(AdapterView<?> a, View view, int position, long arg)
+			   public void onItemClick(AdapterView<?> a, View view, final int position, long arg)
 					{
 						
 						System.out.println("Item clicked in edit mode at position: " + position + ". Can you believe it?!");
-						LinearLayout editSpecificSection = (LinearLayout) curView.findViewById(R.id.editSpecificSection);
+						final LinearLayout editSpecificSection = (LinearLayout) curView.findViewById(R.id.editSpecificSection);
+						final LinearLayout playSaveBar = (LinearLayout) curView.findViewById(R.id.playSaveBar);
+						playSaveBar.setVisibility(View.GONE);
 						editSpecificSection.setVisibility(View.VISIBLE);
+						
+						
+						
+						Button okButton = (Button) editSpecificSection.findViewById(R.id.sectionEditOK);
+						okButton.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+								EditText bpmEditText = (EditText) editSpecificSection.findViewById(R.id.editBPM);
+								int newBPM = Integer.parseInt(bpmEditText.getText().toString());
+								EditText measuresEditText = (EditText) editSpecificSection.findViewById(R.id.editMeasures);
+								int newMeasures = Integer.parseInt(measuresEditText.getText().toString());
+								
+								if((newBPM > 0) && (newMeasures > 0))
+								{
+									tempoVector.set(position, newBPM);
+									measuresVector.set(position, newMeasures);
+									
+									Vector<Integer> newSection = (Vector<Integer>) sections.get(position);
+									newSection.set(0, newBPM);
+									newSection.set(1, newMeasures);
+									
+									sections.set(position, newSection);
+									
+									bpmEditText.setText("");
+									measuresEditText.setText("");
+									editSpecificSection.setVisibility(View.GONE);
+									playSaveBar.setVisibility(View.VISIBLE);
+									
+									tsAdapter.notifyDataSetChanged();
+					
+								}
+							}
+	
+						});
+						
+						final Button cancelButton = (Button) editSpecificSection.findViewById(R.id.sectionEditCancel);
+			            cancelButton.setOnClickListener(new View.OnClickListener() {
+			                public void onClick(View v) {
+								EditText bpmEditText = (EditText) editSpecificSection.findViewById(R.id.editBPM);
+								EditText measuresEditText = (EditText) editSpecificSection.findViewById(R.id.editMeasures);
+								
+								bpmEditText.setText("");
+								measuresEditText.setText("");
+			                    editSpecificSection.setVisibility(View.GONE);
+			                    playSaveBar.setVisibility(View.VISIBLE);
+			                }
+			            });
+			            
+			            final Button deleteButton = (Button) editSpecificSection.findViewById(R.id.sectionEditDelete);
+			            deleteButton.setOnClickListener(new View.OnClickListener() {
+			            	public void onClick(View v) {
+			            		sections.remove(position);
+			            		tsAdapter.notifyDataSetChanged();
+			            		
+								EditText bpmEditText = (EditText) editSpecificSection.findViewById(R.id.editBPM);
+								EditText measuresEditText = (EditText) editSpecificSection.findViewById(R.id.editMeasures);
+								bpmEditText.setText("");
+								measuresEditText.setText("");
+			                    editSpecificSection.setVisibility(View.GONE);
+			                    playSaveBar.setVisibility(View.VISIBLE);
+			            	}
+			            });
 						
 						
 					} 
@@ -172,6 +241,8 @@ public class EditFragment extends Fragment
 		//maybe invalidate and redraw here, replace view
 		
 		tsAdapter.notifyDataSetChanged();
+		
+		
 	}
 	
 	

@@ -38,15 +38,16 @@
         android:scaleType="fitCenter"
         android:src="@drawable/ic_delete" />
     
+    
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:id="@+id/separator2"
-        android:layout_marginTop="10dp"
         android:visibility="visible"
         android:background="@android:color/darker_gray"/>
 
     <LinearLayout
+        android:id="@+id/playSaveBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         
@@ -85,7 +86,7 @@
         android:layout_height="wrap_content" >
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/editBPM"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
@@ -106,7 +107,7 @@
         android:layout_height="wrap_content" >
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/editMeasures"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
@@ -127,20 +128,20 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/sectionEditOK"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/OK" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/sectionEditCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Cancel" />
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/sectionEditDelete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
