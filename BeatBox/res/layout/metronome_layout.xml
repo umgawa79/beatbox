@@ -15,25 +15,39 @@
         android:textSize="20sp"
         android:text="@string/song_title"
         android:visibility="invisible" />
-
-    <HorizontalScrollView
-        android:id="@+id/tempo_timeline"
-        android:layout_width="fill_parent"
+	
+    <FrameLayout
+        android:id="@+id/timeline_container"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:scrollbars="none"
-        android:visibility="invisible"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="10dp">
-        <LinearLayout
-            android:id="@+id/tempo_container"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp">
-            <!-- android:layout_height="match_parent"-->
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:layout_width="fill_parent">
+	    <HorizontalScrollView
+	        android:id="@+id/tempo_timeline"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/border"
+	        android:scrollbars="none"
+	        android:visibility="invisible"
+	        android:layout_marginLeft="15dp"
+	        android:layout_marginRight="15dp"
+	        android:layout_marginBottom="10dp">
+	        <LinearLayout
+	            android:id="@+id/tempo_container"
+	            android:orientation="horizontal"
+	            android:layout_width="wrap_content"
+	            android:layout_height="70dp">
+	            <!-- android:layout_height="match_parent"-->          
+	        </LinearLayout>
+	    </HorizontalScrollView>
+	    <LinearLayout
+	        android:id="@+id/tempo_tracker"
+			android:layout_height="70dp"
+		    android:layout_width="2dp"
+		    android:background="#FF0000"
+		    android:orientation="vertical"
+		    android:layout_gravity="center"
+		    android:layout_marginBottom="5dp"
+		    android:visibility="invisible"/>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/bpm_layout"

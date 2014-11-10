@@ -141,6 +141,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	Button dec = (Button) v.findViewById(R.id.dec_tempo_button);
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
     	View tempoTimeline = v.findViewById(R.id.tempo_timeline);
+    	LinearLayout tempoTracker = (LinearLayout) v.findViewById(R.id.tempo_tracker);
     	if(modeButton != null && inc != null && dec != null && songTitle != null && tempoTimeline != null)
     	{
     		switch(mMode)
@@ -153,6 +154,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			dec.setVisibility(View.INVISIBLE);
 	    			songTitle.setVisibility(View.VISIBLE);
 	    			tempoTimeline.setVisibility(View.VISIBLE);
+	    			tempoTracker.setVisibility(View.VISIBLE);
 	    			mMode = MetronomeMode.TEMPLATE;
 	    			break;
 	    		}
@@ -164,6 +166,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			dec.setVisibility(View.VISIBLE);
 	    			songTitle.setVisibility(View.INVISIBLE);
 	    			tempoTimeline.setVisibility(View.INVISIBLE);
+	    			tempoTracker.setVisibility(View.INVISIBLE);
 	    			mMode = MetronomeMode.BASIC;
 	    			break;
 	    		}
