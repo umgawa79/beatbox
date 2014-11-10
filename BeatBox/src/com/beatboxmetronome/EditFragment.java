@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
@@ -158,6 +159,10 @@ public class EditFragment extends Fragment
 					{
 						
 						System.out.println("Item clicked in edit mode at position: " + position + ". Can you believe it?!");
+						LinearLayout editSpecificSection = (LinearLayout) curView.findViewById(R.id.editSpecificSection);
+						editSpecificSection.setVisibility(View.VISIBLE);
+						
+						
 					} 
 			});
 	    

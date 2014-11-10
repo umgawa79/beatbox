@@ -46,7 +46,12 @@
     <string name="create_plus_desc">Add another section</string>
     <string name="create_play">play</string>
     <string name="create_save">save</string>
-	
+    
+    <string name="measures">measures</string>
+    <string name="bpm">bpm</string>
+    <string name="OK">OK</string>
+    <string name="Cancel">Cancel</string>
+    <string name="delete">delete</string>
 	
 	
 	
