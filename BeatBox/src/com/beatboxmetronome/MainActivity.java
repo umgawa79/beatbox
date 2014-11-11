@@ -11,12 +11,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, LoadListFragment.OnTemplateSelectedListener
 {
@@ -66,13 +70,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         try
 		{
 			Template test = new Template();
-			test.testTemplate("Test Song Name");
+			test.testTemplate("Symphony No. 5");
 			test.saveTemplate();
-			test.testTemplate("Second Test Name");
+			test.testTemplate("1812 Overture");
 			test.saveTemplate();
-			test.testTemplate("online name one");
+			test.testTemplate("Habenera");
 			test.uploadTemplate();
-			test.testTemplate("online template two");
+			test.testTemplate("William Tell Overture");
 			test.uploadTemplate();
 		}
 		catch(IOException e)
@@ -122,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private String downloadItemText = "Download";
     private LoadListFragment loadFrag;
     private EditText mSearchField;
-    private Button mSearchButton;
+    private ImageButton mSearchButton;
     
     public LoadListFragment getLoadListFragment()
     {
@@ -138,7 +142,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         MenuItem searchItem = menu.findItem(R.id.menu_search);
         mSearchField = (EditText) searchItem.getActionView()
         		.findViewById(R.id.search);
-        mSearchButton = (Button) searchItem.getActionView()
+        mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                	System.out.println("Search initiated!");
+        	    	String toFind = mSearchField.getText().toString();
+        	    	loadFrag.onSearchRequest(toFind);
+                    return true;
+                }
+                return false;
+            }
+        });
+        mSearchButton = (ImageButton) searchItem.getActionView()
         		.findViewById(R.id.searchButton);
         item.setTitle(downloadItemText);
         mSearchButton.setOnClickListener(new OnClickListener() {

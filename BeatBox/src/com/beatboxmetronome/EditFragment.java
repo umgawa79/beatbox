@@ -93,19 +93,6 @@ public class EditFragment extends Fragment
 	
 	private void fill(File f)
 	{
-		try
-		{
-			Template test = new Template();
-			test.testTemplate("TestSongName");
-			test.saveTemplate();
-			test.testTemplate("SecondTestName");
-			test.saveTemplate();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-			System.out.println("failed to save");
-		}
 		Log.d("BeatBox", "fill starting");
 		File[] savedTemplates = f.listFiles();
 		List<Template> templates = new ArrayList<Template>();

@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
     
     <EditText
         android:id="@+id/search"
-        android:layout_width="100dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:hint="@string/search"
-        android:minWidth="25dp" >
-      <!--  <requestFocus/>  -->
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
+        android:inputType="text" >
     </EditText>
 
     <!-- Could add clear button: 
     http://blog.stylingandroid.com/basic-actionbar-part5/ -->
-    <Button
+
+    <ImageButton
         android:id="@+id/searchButton"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_toRightOf="@id/search"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="3dp"
-        android:background="@drawable/ic_search"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="7dp"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/search"
+        android:gravity="bottom|center_vertical"
+        android:src="@drawable/ic_search" />
     
-</RelativeLayout>
+</LinearLayout>
