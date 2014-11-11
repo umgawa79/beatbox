@@ -243,6 +243,7 @@ public class EditFragment extends Fragment
 					    LayoutInflater inflater = LayoutInflater.from(c);
 					    curView = templatesView;
 					    parent.addView(curView, index);
+					    tsAdapter.notifyDataSetChanged();
 						
 						
 						
