@@ -29,15 +29,12 @@
         android:layout_weight="1" >
     </ListView>
 
-    <ImageButton
-        android:id="@+id/imageButton1"
+    <Button
+        android:id="@+id/createNewSectionButton"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/create_plus_desc"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_delete" />
-    
+        android:layout_height="wrap_content"
+        android:text="@string/createNewSection" />
+
     
     <View
         android:layout_width="fill_parent"

@@ -38,14 +38,15 @@
 	
 	    <!-- Strings for the Edit Screen -->
 	<string name="editListTitle">Select Template to Edit</string>
-	<string name="createNewTemplate">Create New</string>
+	<string name="createNewTemplate">Create Template</string>
 	<string name="create_song_description">Description</string>
     <string name="create_song_artist">Artist</string>
     <string name="create_song_creator">Creator</string>
-    <string name="create_title">Create Template</string>
+    <string name="create_title">Edit Template</string>
     <string name="create_plus_desc">Add another section</string>
     <string name="create_play">play</string>
     <string name="create_save">save</string>
+    <string name="createNewSection">Add Section</string>
     
     <string name="measures">measures</string>
     <string name="bpm">bpm</string>
