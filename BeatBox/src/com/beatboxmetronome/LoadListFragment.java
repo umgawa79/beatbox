@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * This file and the entire load function is heavily based on this tutorial: 
@@ -45,6 +46,7 @@ public class LoadListFragment extends ListFragment {
     private FileArrayAdapter adapter;
     private Context c;
     private boolean localList = true;
+    private String searchWords = "";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -88,6 +90,19 @@ public class LoadListFragment extends ListFragment {
 		super.onPause();
 	}
 	
+	public void onSearchRequest(String toFind)
+	{
+		//Refill the list based on templates containing the string.
+		System.out.println("Search request for: " + toFind);
+		searchWords = toFind;
+		fill(currentDir);
+	}
+	
+	public void onSaveRequest()
+	{
+		if(localList) fill(currentDir);
+	}
+	
 	private void fill(File f)
 	{
 		Log.d("BeatBox", "fill starting");
@@ -96,13 +111,16 @@ public class LoadListFragment extends ListFragment {
 		try{
 			for (File ff: savedTemplates)
 			{
-				templates.add(new Template(ff));
+				Template t = new Template(ff);
+				if(t.getTemplateName().toLowerCase(Locale.ENGLISH).contains(searchWords.toLowerCase(Locale.ENGLISH)))
+					templates.add(t); // Only what was searched for.
 			}
 		}
 		catch(Exception e)
 		{
 			//nothing to do here
 		}
+		searchWords = ""; // Reset search
 		Collections.sort(templates);
         adapter = new FileArrayAdapter(c,R.layout.fragment_load_bar,templates);
         if (localList) adapter.switchMode("Download");

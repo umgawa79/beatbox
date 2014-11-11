@@ -5,8 +5,15 @@
     
     <item
         android:id="@+id/action_download"
-        android:orderInCategory="100"
+        android:orderInCategory="3"
         android:title="@string/download_button"
         app:showAsAction="always"/>
+    
+    <item
+        android:id="@+id/menu_search"
+        app:showAsAction="always"
+        android:title="@string/search"
+        android:orderInCategory="2"
+        app:actionLayout="@layout/search_layout"/>
 
 </menu>

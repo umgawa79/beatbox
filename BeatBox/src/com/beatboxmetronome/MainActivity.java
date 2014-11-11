@@ -13,6 +13,10 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, LoadListFragment.OnTemplateSelectedListener
 {
@@ -117,6 +121,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     
     private String downloadItemText = "Download";
     private LoadListFragment loadFrag;
+    private EditText mSearchField;
+    private Button mSearchButton;
+    
+    public LoadListFragment getLoadListFragment()
+    {
+    	return loadFrag;
+    }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -124,10 +135,29 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item  = menu.findItem(R.id.action_download);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        mSearchField = (EditText) searchItem.getActionView()
+        		.findViewById(R.id.search);
+        mSearchButton = (Button) searchItem.getActionView()
+        		.findViewById(R.id.searchButton);
         item.setTitle(downloadItemText);
+        mSearchButton.setOnClickListener(new OnClickListener() {
+        	   @Override
+        	   public void onClick(View v) {
+        		    System.out.println("Search initiated!");
+        	    	String toFind = mSearchField.getText().toString();
+        	    	loadFrag.onSearchRequest(toFind);
+        	   }
+        	});
         int tab = this.getActionBar().getSelectedNavigationIndex();
-        if (tab == 2) item.setVisible(true);
-        else item.setVisible(false);
+        if (tab == 2) {
+        	item.setVisible(true);
+        	searchItem.setVisible(true);
+        }
+        else {
+        	item.setVisible(false);
+        	searchItem.setVisible(false);
+        }
         return true;
     }
     
@@ -145,8 +175,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_download) {
-        	//TODO send a callback to the loadlistfragment, tell it to switch the list to downloads view.
-        	// Also change the download text to say local
         	if (item.getTitle().equals("Download"))
         	{
         			item.setTitle("Local");
@@ -162,6 +190,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         		loadFrag.switchMode("Download");
         	}
         	//need to redraw actionbar here too.
+        if (id == R.id.menu_search)
+        {
+        	System.out.println("MENU SEARCH PRESSED");
+        	Button temp = (Button) item.getActionView()
+            		.findViewById(R.id.searchButton);
+        	if (temp.getId() == R.id.searchButton); System.out.println("IT WAS SEARCH BUTTON");
+        }
             return true;
         }
         return super.onOptionsItemSelected(item);

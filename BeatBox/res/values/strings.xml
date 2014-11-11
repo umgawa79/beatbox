@@ -21,6 +21,7 @@
 	<string name="load_edit_button">Edit</string>
 	<string name="load_upload_button">Upload</string>
 	<string name="load_delete_button">Delete</string>
+	<string name="search">Search</string>
 
 	<!-- Strings for the Save Screen -->
 	<string name="save_title">Template Name</string>
