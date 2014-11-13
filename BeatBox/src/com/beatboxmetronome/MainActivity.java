@@ -1,5 +1,6 @@
 package com.beatboxmetronome;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +70,23 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        // Create the folders for storage
+        File currentDir = getFilesDir();
+		File localDir = new File(currentDir + "/local/");
+		boolean success = true;
+		if (!localDir.exists()) success = localDir.mkdir();
+		if (!success)
+		{
+			Log.e("BeatBox", "Local folder could not be created!");
+		}
+		success = true;
+		File onlineDir = new File(currentDir + "/online/");
+		if (!onlineDir.exists()) success = onlineDir.mkdir();
+		if (!success)
+		{
+			Log.e("BeatBox", "Online folder could not be created!");
+		}
         
         // Save a few test templates, to be removed in the final version.
         try

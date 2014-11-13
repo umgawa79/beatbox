@@ -24,16 +24,13 @@ public class Template implements Comparable<Template> {
 	private Vector<Integer> tempos; //The sections of the template, each with its own tempo 
 	private Vector<Integer> measures; //The number of measures in section n
 	private Vector<Integer> timesigs; //The number of beats per measure in section n
-	private String localFileDir;
-	private String onlineFileDir;
-	private String ext;
+	private String localFileDir = "/data/data/com.beatboxmetronome/files/local/";
+	private String onlineFileDir = "/data/data/com.beatboxmetronome/files/online/";
+	private String ext = ".tt";
 	
 	public Template(File f)
 	{
 		Log.d("BeatBox", "Template constructor starting");
-		localFileDir = new String("/data/data/com.beatboxmetronome/files/local/");
-		onlineFileDir = new String("/data/data/com.beatboxmetronome/files/online/");
-		ext = new String(".tt");
 		try {
 			loadTemplate(f);
 		}

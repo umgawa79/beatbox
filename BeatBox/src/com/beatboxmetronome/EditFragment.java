@@ -378,7 +378,9 @@ public class EditFragment extends Fragment
 		Button saveInfoButton = (Button) curView.findViewById(R.id.save_button_save);
 		saveInfoButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				t.setTemplateName(saveTitle.getText().toString());
+				String potentialName = (saveTitle.getText().toString());
+				if (potentialName == null || potentialName.equals("")) potentialName = "Untitled";
+				t.setTemplateName(potentialName);
 				t.setComposer(saveComposer.getText().toString());
 				t.setDescription(saveDescription.getText().toString());
 				t.setCreator(saveCreator.getText().toString());

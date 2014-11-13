@@ -55,20 +55,7 @@ public class LoadListFragment extends ListFragment {
 		Log.d("BeatBox", "onCreate starting LOADLIST");
 		c = getActivity();
 		currentDir = c.getFilesDir();
-		File localDir = new File(currentDir + "/local/"); // TODO put this code in editFragment or main.
-		boolean success = true;
-		if (!localDir.exists()) success = localDir.mkdir();
-		if (!success)
-		{
-			Log.e("BeatBox", "Local folder could not be created!");
-		}
-		success = true;
-		File onlineDir = new File(currentDir + "/online/");
-		if (!onlineDir.exists()) success = onlineDir.mkdir();
-		if (!success)
-		{
-			Log.e("BeatBox", "Online folder could not be created!");
-		}
+		File localDir = new File(currentDir + "/local/");
 		currentDir = localDir; // By default we populate the local list first.
 		System.out.println(currentDir.getAbsolutePath());
 		fill(currentDir);
@@ -159,7 +146,7 @@ public class LoadListFragment extends ListFragment {
 		else //s == Download, switch to the local list.
 		{
 			System.out.println("switching to " + s + " list");
-			currentDir = new File(c.getFilesDir()+"/local/");//TODO Check if worked.
+			currentDir = new File(c.getFilesDir()+"/local/");
 			localList = true;
 			fill(currentDir);
 		}
