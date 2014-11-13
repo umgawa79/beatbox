@@ -3,8 +3,11 @@ package com.beatboxmetronome;
 import java.io.IOException;
 import java.util.Locale;
 
+import com.beatboxmetronome.TempoDialog.TempoDialogListener;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,7 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, LoadListFragment.OnTemplateSelectedListener
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, LoadListFragment.OnTemplateSelectedListener, TempoDialogListener
 {
 	/**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -287,4 +290,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             return null;
         }
     }
+
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog)
+	{
+		MetronomeFragment metronome = (MetronomeFragment) mSectionsPagerAdapter.instantiateItem(mViewPager, 1);
+    	if(metronome != null)
+    	{
+    		EditText bpmText = (EditText) dialog.getDialog().findViewById(R.id.tempo_edit);
+    		if(bpmText != null)
+    		{
+    			try
+    			{
+    				Integer bpm = new Integer(bpmText.getText().toString());
+    				metronome.setTempo(bpm);
+    			}
+    			catch(NumberFormatException e)
+    			{}
+    		}
+    	}
+	}
 }

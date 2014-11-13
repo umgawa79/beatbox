@@ -1,9 +1,10 @@
 package com.beatboxmetronome;
 
-import java.util.Random;
 import java.util.Vector;
 import java.lang.Runnable;
-
+import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -11,7 +12,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /********************************************************************************************************************
- * This fragment resides in the Metronome tab of the UI. It provides the Basic and Template capabilities of the mentronone.
+ * This fragment resides in the Metronome tab of the UI. It provides the Basic and Template capabilities of the metronone.
  *******************************************************************************************************************/
 public class MetronomeFragment extends Fragment implements OnClickListener
 {
@@ -93,6 +93,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         iBtn.setOnClickListener(this);
         iBtn = (ImageButton) fragView.findViewById(R.id.pause_button);
         iBtn.setOnClickListener(this);
+        TextView tv = (TextView) fragView.findViewById(R.id.bpm_text);
+        tv.setOnClickListener(this);
         
         setTempo(mTempo);
 
@@ -127,9 +129,23 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		{
 			switchModes();
 		}
+		else if(v.getId() == R.id.bpm_text)
+		{
+			editBpm();
+		}
 	}
 	
 	
+	/********************************************************************************************************************
+	 * Brings up a dialog for editing the tempo
+	 *******************************************************************************************************************/
+	private void editBpm()
+	{
+		DialogFragment dlg = new TempoDialog();
+		dlg.show(getFragmentManager(), getString(R.string.tempo_dialog));
+	}
+
+
 	/********************************************************************************************************************
 	 * Switches between the basic and template modes of the fragment.
 	 *******************************************************************************************************************/
@@ -238,7 +254,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 * Updates the tempo value displayed by the TextView widget
 	 * @param bpm
 	 *******************************************************************************************************************/
-    private void setTempo(int bpm)
+    public void setTempo(int bpm)
     {
     	View v = this.getView();
     	if(v != null)

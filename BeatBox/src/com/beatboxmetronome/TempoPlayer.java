@@ -34,6 +34,7 @@ public class TempoPlayer implements Runnable
 		if(mMediaPlayer != null)
 		{
 			long period = Math.round(60000.0 / mTempo); //number of milliseconds per beat
+			mMediaPlayer.setVolume(0.75f, 0.75f);
 			mMediaPlayer.start();
 			if(shouldContinue)
 			{
