@@ -35,6 +35,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	private TempoPlayer mTempoPlayer;
 	private Handler mHandler;
 	private Template curTemplate;
+	private TimelinePlayer mTimelinePlayer;
 	
 	
 	/******************************************************************************************************************
@@ -46,6 +47,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		mMode = MetronomeMode.BASIC;
 		mTempoPlayer = null;
 		mMediaPlayer = null;
+		mTimelinePlayer = null;
 	}
 	
 	
@@ -164,7 +166,6 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     		{
 	    		case BASIC:
 	    		{
-	    			//drawTempoTimeline(curTemplate);
 	    			modeButton.setText(R.string.basic_mode_label);
 	    			inc.setVisibility(View.INVISIBLE);
 	    			dec.setVisibility(View.INVISIBLE);
@@ -176,7 +177,6 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    		}
 	    		case TEMPLATE:
 	    		{
-	    			//resetTempoTimeline();
 	    			modeButton.setText(R.string.template_mode_label);
 	    			inc.setVisibility(View.VISIBLE);
 	    			dec.setVisibility(View.VISIBLE);
@@ -204,23 +204,27 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		ImageButton pauseButton = (ImageButton) v.findViewById(R.id.pause_button);
 		pauseButton.setVisibility(View.VISIBLE);
 		
+		LinearLayout tempoContainer = (LinearLayout) this.getView().findViewById(R.id.tempo_container);
 		
-		Runnable timelinePlayer = new Runnable(){
-			public void run(){
-				playTimeline();
-			}
-		};
+		if(mMode == MetronomeMode.TEMPLATE && tempoContainer.getChildCount() > 0){
+			Runnable timelinePlayer = new Runnable(){
+				public void run(){
+					 mTimelinePlayer.play();
+				}
+			};
+			getActivity().runOnUiThread(timelinePlayer);
+		}
 		
 		mTempoPlayer.setTempo(mTempo);
 		mHandler.post(mTempoPlayer);
-		getActivity().runOnUiThread(timelinePlayer);
+		
 	}
 	
 	
 	/********************************************************************************************************************
 	 * Pauses the metronome.
 	 *******************************************************************************************************************/
-	private void pause()
+	public void pause()
 	{
 		View v = this.getView();
 		ImageButton playButton = (ImageButton) v.findViewById(R.id.play_button);
@@ -229,6 +233,9 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		pauseButton.setVisibility(View.INVISIBLE);
 		
 		mHandler.removeCallbacks(mTempoPlayer);
+		
+		if(((LinearLayout) v.findViewById(R.id.tempo_container)).getChildCount() > 0)
+			mTimelinePlayer.pause();
 	}
 
 
@@ -277,6 +284,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     private void drawTempoTimeline(Template aTemplate)
     {
     	LinearLayout tempoContainer = (LinearLayout) this.getView().findViewById(R.id.tempo_container);
+    	HorizontalScrollView tempoTimeline = (HorizontalScrollView) this.getView().findViewById(R.id.tempo_timeline);
     	
     	Vector<Integer> measureVector = aTemplate.getMeasuresVector();
     	Vector<Integer> timesigVector = aTemplate.getTimesigVector();
@@ -288,13 +296,22 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     		bmapSize += measureVector.elementAt(i) * timesigVector.elementAt(i);
     	}
     	
+    	float padding = (float)(tempoTimeline.getWidth()/2.0)-5;
+    	
+    	bmapSize += (int)(padding*2);
+    	
         Bitmap bmap = Bitmap.createBitmap(bmapSize, 70, Bitmap.Config.ARGB_8888); 
         Canvas canv = new Canvas(bmap);
         ImageView tempo = new ImageView(getActivity());
-   
+        
         float left = 0.0f;
         double blue = 0.0;
         double green = 0.0;
+        Paint paddingColor = new Paint();
+        paddingColor.setARGB(255, 154, 154, 154);
+        
+        canv.drawRect(left, 70, left+padding, 0, paddingColor);
+        left += padding;
         
         for(int i = 0; i < measureVector.size(); i++)
         {
@@ -317,11 +334,14 @@ public class MetronomeFragment extends Fragment implements OnClickListener
             canv.drawRect(left, 70, left+width, 0, color);
             
             left += width;
-        }               
+        }
+        
+        canv.drawRect(left, 70, left+padding, 0, paddingColor);
         
         tempo.setImageBitmap(bmap);
         tempo.setScaleType(ImageView.ScaleType.FIT_START);
         tempoContainer.addView(tempo);
+    	tempoTimeline.scrollTo(0, 0);
     }
     
     
@@ -334,35 +354,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	LinearLayout tempoContainer = (LinearLayout) this.getView().findViewById(R.id.tempo_container);
     	tempoContainer.removeAllViews();
     }
-    
-    
-    /********************************************************************************************************************
-     * Plays the tempo timeline. 
-     * If the timeline reaches the end, moves the timeline to the start.
-     ********************************************************************************************************************/
-    private void playTimeline()
-    {
-    	View v = this.getView();
-    	LinearLayout tempoContainer = (LinearLayout) v.findViewById(R.id.tempo_container);
-    	final HorizontalScrollView tempoTimeline = (HorizontalScrollView) v.findViewById(R.id.tempo_timeline);
-    	final int limit = tempoContainer.getWidth();
-    	new CountDownTimer((limit*14)-1200, 1)
-    	{          
-
-    		 public void onTick(long millisLeft)
-    		 {             
-    			 tempoTimeline.smoothScrollBy(1, 0);         
-    		 }          
-
-    		 public void onFinish()
-    		 {
-    			 tempoTimeline.scrollTo(0, 0);
-    		 }      
-
-    	}.start(); 
-    }
-    
-    
+        
     /********************************************************************************************************************
      * Loads the Template into the metronome page, updating all the fields and preparing the page to play the Template.
      *******************************************************************************************************************/
@@ -377,5 +369,6 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	songTitle.setText(aTemplate.getTemplateName().toCharArray(), 0, aTemplate.getTemplateName().length());
     	this.resetTempoTimeline();
     	this.drawTempoTimeline(aTemplate);
+    	mTimelinePlayer = new TimelinePlayer(v, this);
     }
 }
