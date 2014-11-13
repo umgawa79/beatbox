@@ -24,10 +24,16 @@ public class Template implements Comparable<Template> {
 	private Vector<Integer> tempos; //The sections of the template, each with its own tempo 
 	private Vector<Integer> measures; //The number of measures in section n
 	private Vector<Integer> timesigs; //The number of beats per measure in section n
+	private String localFileDir;
+	private String onlineFileDir;
+	private String ext;
 	
 	public Template(File f)
 	{
 		Log.d("BeatBox", "Template constructor starting");
+		localFileDir = new String("/data/data/com.beatboxmetronome/files/local/");
+		onlineFileDir = new String("/data/data/com.beatboxmetronome/files/online/");
+		ext = new String(".tt");
 		try {
 			loadTemplate(f);
 		}
@@ -151,7 +157,7 @@ public class Template implements Comparable<Template> {
 	public void saveTemplate() throws IOException
 	{
 		PrintWriter writer = new PrintWriter(new
-				FileWriter("/data/data/com.beatboxmetronome/files/local/"+templateName+".tt"), true);//TODO temp hardcode
+				FileWriter(localFileDir+templateName+ext), true);//TODO temp hardcode
 		writer.println("NAME: " + templateName + " " + endField);
 		writer.println("CREATOR: " + creator + " " + endField);
 		writer.println("DESCRIPTION: " + description + " " + endField);
@@ -168,7 +174,7 @@ public class Template implements Comparable<Template> {
 	public void uploadTemplate() throws IOException
 	{
 		PrintWriter writer = new PrintWriter(new
-				FileWriter("/data/data/com.beatboxmetronome/files/online/"+templateName+".tt"), true);//TODO temp hardcode
+				FileWriter(onlineFileDir+templateName+ext), true);//TODO temp hardcode
 		writer.println("NAME: " + templateName + " " + endField);
 		writer.println("CREATOR: " + creator + " " + endField);
 		writer.println("DESCRIPTION: " + description + " " + endField);
@@ -185,7 +191,7 @@ public class Template implements Comparable<Template> {
 	public void downloadTemplate() throws IOException
 	{
 		PrintWriter writer = new PrintWriter(new
-				FileWriter("/data/data/com.beatboxmetronome/files/local/"+templateName+".tt"), true);//TODO temp hardcode
+				FileWriter(localFileDir+templateName+ext), true);//TODO temp hardcode
 		writer.println("NAME: " + templateName + " " + endField);
 		writer.println("CREATOR: " + creator + " " + endField);
 		writer.println("DESCRIPTION: " + description + " " + endField);
@@ -201,10 +207,13 @@ public class Template implements Comparable<Template> {
 	
 	public void deleteTemplate()
 	{
-		File f = new File("/data/data/com.beatboxmetronome/files/"+templateName+".tt");
-		boolean deleted = f.delete();
-		if (!deleted) Log.e("BeatBox", "Failed to delete template file!");
-		else System.out.println("Deleted successfully");
+		File f = new File(localFileDir+templateName+ext);
+		if(f.exists())
+			Log.d("BeatBox", "File "+f.getAbsolutePath()+" exists");
+		if(f.delete())
+			Log.d("BeatBox", "Deleted successfully");
+		else
+			Log.e("BeatBox", "Failed to delete template file!"); 
 	}
 	
 	public String getTemplateName()
