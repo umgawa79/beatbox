@@ -16,13 +16,13 @@ public class TimelinePlayer {
 	View template;
 	CountDownTimer timelineTimer;
 	LinearLayout tempoContainer;
-	HorizontalScrollView tempoTimeline;
+	Timeline tempoTimeline;
 	MetronomeFragment metronome;
 	
 	public TimelinePlayer(View v, MetronomeFragment metronome){
 		this.template = v;
 		this.tempoContainer = (LinearLayout) template.findViewById(R.id.tempo_container);
-    	this.tempoTimeline  = (HorizontalScrollView) template.findViewById(R.id.tempo_timeline);
+    	this.tempoTimeline  = (Timeline) template.findViewById(R.id.tempo_timeline);
     	this.metronome = metronome;
 	}
 	
@@ -36,18 +36,18 @@ public class TimelinePlayer {
 			curPos = tempoTimeline.getScrollX();
 		}
 		
-		scrollTime = (tempoContWidth - curPos - offset) * 20;
-				
+		scrollTime = (tempoContWidth - curPos - offset) * 28;
+		
     	timelineTimer = new CountDownTimer(scrollTime, 1)
     	{          
     		 public void onTick(long millisLeft)
     		 {   
-    			 tempoTimeline.scrollBy(1, 0);  
+    			 tempoTimeline.scrollBy(1, 0);
     		 }          
 
     		 public void onFinish()
     		 {
-    			 tempoTimeline.smoothScrollTo((int)(tempoContWidth-(offset/2)), 0); //temporary solution to some bug.
+    			 //tempoTimeline.smoothScrollTo((int)(tempoContWidth-(offset/2)), 0);
     			 metronome.pause();    			 
     		 }      
     	}.start();
@@ -55,10 +55,6 @@ public class TimelinePlayer {
 	
 	public void pause(){
 		timelineTimer.cancel();
-	}
-	
-	public void resume(){
-		
 	}
 	
 }

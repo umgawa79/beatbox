@@ -173,6 +173,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			tempoTimeline.setVisibility(View.VISIBLE);
 	    			tempoTracker.setVisibility(View.VISIBLE);
 	    			mMode = MetronomeMode.TEMPLATE;
+	    			load(curTemplate);
 	    			break;
 	    		}
 	    		case TEMPLATE:
@@ -224,7 +225,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	/********************************************************************************************************************
 	 * Pauses the metronome.
 	 *******************************************************************************************************************/
-	public void pause()
+	public void pause() //Changed it from private to public to access it in the timeline player
 	{
 		View v = this.getView();
 		ImageButton playButton = (ImageButton) v.findViewById(R.id.play_button);
@@ -284,7 +285,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     private void drawTempoTimeline(Template aTemplate)
     {
     	LinearLayout tempoContainer = (LinearLayout) this.getView().findViewById(R.id.tempo_container);
-    	HorizontalScrollView tempoTimeline = (HorizontalScrollView) this.getView().findViewById(R.id.tempo_timeline);
+    	Timeline tempoTimeline = (Timeline) this.getView().findViewById(R.id.tempo_timeline);
     	
     	Vector<Integer> measureVector = aTemplate.getMeasuresVector();
     	Vector<Integer> timesigVector = aTemplate.getTimesigVector();
@@ -363,12 +364,21 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	curTemplate = aTemplate;
     	if(mMode == MetronomeMode.BASIC)
     		switchModes();
-    	setTempo(aTemplate.getTempoVector().firstElement().intValue());
-    	View v = this.getView();
+    	//setTempo(aTemplate.getTempoVector().firstElement().intValue());
+    	final View v = this.getView(); //Added final to pass it as a parameter to the timeline class
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
     	songTitle.setText(aTemplate.getTemplateName().toCharArray(), 0, aTemplate.getTemplateName().length());
     	this.resetTempoTimeline();
     	this.drawTempoTimeline(aTemplate);
     	mTimelinePlayer = new TimelinePlayer(v, this);
+    	
+    	final Timeline tline = (Timeline) v.findViewById(R.id.tempo_timeline);
+    	tline.setOnScrollViewListener(new OnScrollViewListener(){
+    		public void onScrollChanged(Timeline tl, int l, int t, int oldl, int oldt){
+    			tline.scrollHandler(v, mTempoPlayer, l);
+    		};
+    	}, v, aTemplate.getTempoVector(), aTemplate.getMeasuresVector(), aTemplate.getTimesigVector());
+    	
+    	setTempo(aTemplate.getTempoVector().firstElement().intValue()); //moved from the original position for guaranteed update of the tempo text
     }
 }
