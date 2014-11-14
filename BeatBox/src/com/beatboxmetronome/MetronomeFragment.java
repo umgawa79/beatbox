@@ -95,10 +95,10 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         iBtn.setOnClickListener(this);
         iBtn = (ImageButton) fragView.findViewById(R.id.pause_button);
         iBtn.setOnClickListener(this);
-        TextView tv = (TextView) fragView.findViewById(R.id.bpm_text);
+        TextView tv = (TextView) fragView.findViewById(R.id.bpm_text_basic);
         tv.setOnClickListener(this);
         
-        setTempo(mTempo);
+        setTempo(mTempo, 0);
 
         return fragView;
     }
@@ -131,7 +131,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		{
 			switchModes();
 		}
-		else if(v.getId() == R.id.bpm_text)
+		else if(v.getId() == R.id.bpm_text_basic)
 		{
 			editBpm();
 		}
@@ -158,6 +158,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	Button inc = (Button) v.findViewById(R.id.inc_tempo_button);
     	Button dec = (Button) v.findViewById(R.id.dec_tempo_button);
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
+    	TextView basic_bpm = (TextView) v.findViewById(R.id.bpm_text_basic);
+    	TextView template_bpm = (TextView) v.findViewById(R.id.bpm_text_template);
     	View tempoTimeline = v.findViewById(R.id.tempo_timeline);
     	LinearLayout tempoTracker = (LinearLayout) v.findViewById(R.id.tempo_tracker);
     	if(modeButton != null && inc != null && dec != null && songTitle != null && tempoTimeline != null)
@@ -172,8 +174,10 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			songTitle.setVisibility(View.VISIBLE);
 	    			tempoTimeline.setVisibility(View.VISIBLE);
 	    			tempoTracker.setVisibility(View.VISIBLE);
+	    			template_bpm.setVisibility(View.VISIBLE);
+	    			basic_bpm.setVisibility(View.GONE);
 	    			mMode = MetronomeMode.TEMPLATE;
-	    			load(curTemplate);
+	    			//load(curTemplate);
 	    			break;
 	    		}
 	    		case TEMPLATE:
@@ -184,6 +188,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			songTitle.setVisibility(View.INVISIBLE);
 	    			tempoTimeline.setVisibility(View.INVISIBLE);
 	    			tempoTracker.setVisibility(View.INVISIBLE);
+	    			template_bpm.setVisibility(View.GONE);
+	    			basic_bpm.setVisibility(View.VISIBLE);
 	    			mMode = MetronomeMode.BASIC;
 	    			break;
 	    		}
@@ -245,7 +251,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 *******************************************************************************************************************/
 	public void decTempo()
     {
-    	setTempo(--mTempo);
+    	setTempo(--mTempo, 0);
     }
     
     
@@ -254,26 +260,39 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 *******************************************************************************************************************/
 	public void incTempo()
     {
-    	setTempo(++mTempo);
+    	setTempo(++mTempo, 0);
     }
 	
     
 	/********************************************************************************************************************
 	 * Updates the tempo value displayed by the TextView widget
-	 * @param bpm
+	 * @param bpm 
 	 *******************************************************************************************************************/
-    public void setTempo(int bpm)
+    public void setTempo(int bpm, int type) //type: 0 for basic, 1 for template
     {
     	View v = this.getView();
+    	TextView bpmText;
     	if(v != null)
     	{
-    		TextView bpmText = (TextView) v.findViewById(R.id.bpm_text);
+    		if(type == 0){
+    			bpmText = (TextView) v.findViewById(R.id.bpm_text_basic);
+    		}
+    		else{
+    			bpmText = (TextView) v.findViewById(R.id.bpm_text_template);
+    		}
+    		
     		if(bpmText != null)
     		{
-    			mTempo = bpm;
-    			String text = new String();
-    			text += mTempo.toString() + " BPM";
-    			bpmText.setText(text);
+    			if(type == 0){
+	    			mTempo = bpm;
+	    			String text = new String();
+	    			text += mTempo.toString() + " BPM";
+	    			bpmText.setText(text);
+    			}else{
+    				String text = new String();
+	    			text += bpm + " BPM";
+    				bpmText.setText(text);
+    			}
     		}
     	}
     }
@@ -379,6 +398,6 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     		};
     	}, v, aTemplate.getTempoVector(), aTemplate.getMeasuresVector(), aTemplate.getTimesigVector());
     	
-    	setTempo(aTemplate.getTempoVector().firstElement().intValue()); //moved from the original position for guaranteed update of the tempo text
+    	setTempo(aTemplate.getTempoVector().firstElement().intValue(), 1); //moved from the original position for guaranteed update of the tempo text
     }
 }

@@ -67,13 +67,23 @@
             android:text="@string/dec_tempo" />
 
         <TextView
-            android:id="@+id/bpm_text"
+            android:id="@+id/bpm_text_basic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:textSize="20sp"
             android:text="@string/bpm_label" />
+        
+        <TextView
+            android:id="@+id/bpm_text_template"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textSize="20sp"
+            android:text="@string/bpm_label"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/inc_tempo_button"

@@ -36,25 +36,25 @@ public class TimelinePlayer {
 			curPos = tempoTimeline.getScrollX();
 		}
 		
-		scrollTime = (tempoContWidth - curPos - offset) * 28;
+		scrollTime = (tempoContWidth - curPos - offset) * 60;
 		
-    	timelineTimer = new CountDownTimer(scrollTime, 1)
+    	timelineTimer = new CountDownTimer(scrollTime, 50)
     	{          
     		 public void onTick(long millisLeft)
     		 {   
-    			 tempoTimeline.scrollBy(1, 0);
+    			 tempoTimeline.smoothScrollBy(1, 50);
     		 }          
 
     		 public void onFinish()
     		 {
-    			 //tempoTimeline.smoothScrollTo((int)(tempoContWidth-(offset/2)), 0);
     			 metronome.pause();    			 
     		 }      
     	}.start();
 	}
 	
 	public void pause(){
-		timelineTimer.cancel();
+		if(timelineTimer != null)
+			timelineTimer.cancel();
 	}
 	
 }

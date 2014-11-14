@@ -49,7 +49,7 @@ public class Timeline extends HorizontalScrollView{
 		
 		int bpm = tempoVector.elementAt(pos);
 		
-		TextView bpmText = (TextView) v.findViewById(R.id.bpm_text);
+		TextView bpmText = (TextView) v.findViewById(R.id.bpm_text_template);
 		String bpmString = new String();
 		bpmString = bpm + " BPM";
 		bpmText.setText(bpmString);
