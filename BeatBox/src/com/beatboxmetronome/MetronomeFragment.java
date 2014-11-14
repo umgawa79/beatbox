@@ -173,6 +173,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			tempoTimeline.setVisibility(View.VISIBLE);
 	    			tempoTracker.setVisibility(View.VISIBLE);
 	    			mMode = MetronomeMode.TEMPLATE;
+	    			load(curTemplate);
 	    			break;
 	    		}
 	    		case TEMPLATE:
