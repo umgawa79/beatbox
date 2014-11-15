@@ -147,12 +147,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     
     private String downloadItemText = "Download";
     private LoadListFragment loadFrag;
+    private EditFragment editFrag;
     private EditText mSearchField;
     private ImageButton mSearchButton;
     
     public LoadListFragment getLoadListFragment()
     {
     	return loadFrag;
+    }
+    public EditFragment getEditFragment()
+    {
+    	return editFrag;
     }
     
     @Override
@@ -201,8 +206,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     
     public void sendTemplateToEdit(Template t)
     {
-    	// Do similar commands like when template sent to metronome fragment
-    	System.out.println("Send template to edit");
+        // The user selected the headline of an article from the HeadlinesFragment
+        // Do something here to display that article
+    	//System.out.println("Just loaded template: "+t.getTemplateName());
+    	    	
+    	EditFragment edit = (EditFragment) mSectionsPagerAdapter.instantiateItem(mViewPager, 0);
+    	if(edit != null)
+    	{
+    		edit.goToSectionList(t);
+    	}
+    	this.getActionBar().setSelectedNavigationItem(0);
     }
     
     @Override
@@ -274,7 +287,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             // getItem is called to instantiate the fragment for the given page.
             switch(position)
             {
-    	        case 0: return new EditFragment();
+    	        case 0: return editFrag = new EditFragment();
     	        case 1: return new MetronomeFragment();
     	        case 2: return loadFrag = new LoadListFragment();
     	        default: break;

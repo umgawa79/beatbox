@@ -153,6 +153,7 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                                 pbars.remove(pb);
                                 pbars = new ArrayList<ProgressBar>();//reset to prevent adding errors
                                 notifyDataSetChanged();
+                                ((MainActivity)c).getEditFragment().updateTemplatesList();
                     	    }
                     	});
                     	builder.setNegativeButton("No", null); //Do nothing on no

@@ -41,8 +41,10 @@ public class EditFragment extends Fragment
     private int pos = -1; //I'm using this to carry position variable for onclick events for section rows, while having the buttons defined outside that onclick
     private boolean isEditingSection;
     private boolean initialViewHasBeenCreated = false;
+    private boolean onTemplateScreen;
     
     private int numSections;
+
     
     View curView;
     
@@ -96,7 +98,7 @@ public class EditFragment extends Fragment
     
     private View goToTemplateList()
     {
-    	
+    	onTemplateScreen = true;
     	if(initialViewHasBeenCreated)
     	{
         	System.out.println("!isCreatingView 1");
@@ -139,8 +141,9 @@ public class EditFragment extends Fragment
         return curView;       
     }
     
-    private View goToSectionList(final Template t)
+    public View goToSectionList(final Template t)
     {
+    	onTemplateScreen = false;
 		//System.out.println("Here's where I'd send the template to other fragments.");
 		final List<Vector> sections = new ArrayList<Vector>();
 		numSections = t.getNumEntries(); //Have to manually record number of sections throughout adding/deleting.
@@ -355,6 +358,7 @@ public class EditFragment extends Fragment
     
     private View goToSaveView(final Template t)
     {
+    	onTemplateScreen = false;
     	ViewGroup parent = (ViewGroup) curView.getParent();
 	    int index = parent.indexOfChild(curView);
 	    parent.removeView(curView);
@@ -408,9 +412,13 @@ public class EditFragment extends Fragment
 		return curView;
     }
     
-	public void onSaveRequest()
+    //Called by load tab, notifies edit fragment to reload its list of templates
+	public void updateTemplatesList()
 	{
-		fill(currentDir);
+		if(onTemplateScreen)
+		{
+			this.fill(currentDir);
+		}
 	}
 
 	

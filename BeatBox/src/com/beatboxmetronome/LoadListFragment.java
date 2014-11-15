@@ -28,6 +28,11 @@ public class LoadListFragment extends ListFragment {
     public interface OnTemplateSelectedListener {
         public void onTemplateSelected(int position, Template t);
     }
+    
+    public interface OnTemplateToEditListener {
+    	public void onTemplateToEdit(Template t);
+    }
+    
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
