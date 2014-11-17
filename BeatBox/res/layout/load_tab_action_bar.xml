@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
     
     <EditText
         android:id="@+id/search"
-        android:layout_width="140dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search"
         android:singleLine="true"
         android:imeOptions="actionSearch"
+        android:layout_toLeftOf="@+id/searchButton"
         android:inputType="text" >
     </EditText>
 
@@ -17,15 +19,24 @@
     http://blog.stylingandroid.com/basic-actionbar-part5/ -->
 
     <ImageButton
-        android:id="@+id/searchButton"
+        android:id="@id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@+id/repoModeButton"
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/search"
         android:gravity="bottom|center_vertical"
         android:src="@drawable/ic_search" />
     
-</LinearLayout>
+    <Button
+        android:id="@id/repoModeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/search"
+        android:text="@string/download_button"
+        android:layout_alignParentRight="true" />
+    
+</RelativeLayout>

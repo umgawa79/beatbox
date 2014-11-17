@@ -150,6 +150,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private EditFragment editFrag;
     private EditText mSearchField;
     private ImageButton mSearchButton;
+    private Button mRepoModeButton;
     
     public LoadListFragment getLoadListFragment()
     {
@@ -165,9 +166,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item  = menu.findItem(R.id.action_download);
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-        mSearchField = (EditText) searchItem.getActionView()
+        MenuItem loadTabItem = menu.findItem(R.id.menu_load_tab);
+        mSearchField = (EditText) loadTabItem.getActionView()
         		.findViewById(R.id.search);
         mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -181,9 +181,34 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 return false;
             }
         });
-        mSearchButton = (ImageButton) searchItem.getActionView()
+        mRepoModeButton = (Button) loadTabItem.getActionView()
+        		.findViewById(R.id.repoModeButton);
+        OnClickListener mClickListener = new OnClickListener() {
+
+            public void onClick(View v) {
+            	if (v.getId()==R.id.repoModeButton)
+            	{
+            		if (mRepoModeButton.getText().equals("Download"))
+                	{
+                			mRepoModeButton.setText("Local");
+                			downloadItemText = "Local";
+                			System.out.println("Calling switchmode local...");
+                			loadFrag.switchMode("Local");
+                	}
+                	else
+                	{
+                		mRepoModeButton.setText("Download");
+                		downloadItemText = "Download";
+                		System.out.println("Calling switchmode download...");
+                		loadFrag.switchMode("Download");
+                	}
+            	}
+            }
+        };
+        mRepoModeButton.setOnClickListener(mClickListener);
+        mSearchButton = (ImageButton) loadTabItem.getActionView()
         		.findViewById(R.id.searchButton);
-        item.setTitle(downloadItemText);
+        mRepoModeButton.setText(downloadItemText);
         mSearchButton.setOnClickListener(new OnClickListener() {
         	   @Override
         	   public void onClick(View v) {
@@ -194,12 +219,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         	});
         int tab = this.getActionBar().getSelectedNavigationIndex();
         if (tab == 2) {
-        	item.setVisible(true);
-        	searchItem.setVisible(true);
+        	loadTabItem.setVisible(true);
         }
         else {
-        	item.setVisible(false);
-        	searchItem.setVisible(false);
+        	loadTabItem.setVisible(false);
         }
         return true;
     }
@@ -224,32 +247,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_download) {
-        	if (item.getTitle().equals("Download"))
-        	{
-        			item.setTitle("Local");
-        			downloadItemText = "Local";
-        			System.out.println("Calling switchmode local...");
-        			loadFrag.switchMode("Local");
-        	}
-        	else
-        	{
-        		item.setTitle("Download");
-        		downloadItemText = "Download";
-        		System.out.println("Calling switchmode download...");
-        		loadFrag.switchMode("Download");
-        	}
-        	//need to redraw actionbar here too.
-        if (id == R.id.menu_search)
-        {
-        	System.out.println("MENU SEARCH PRESSED");
-        	Button temp = (Button) item.getActionView()
-            		.findViewById(R.id.searchButton);
-        	if (temp.getId() == R.id.searchButton); System.out.println("IT WAS SEARCH BUTTON");
-        }
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
     
@@ -335,7 +332,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     		{
     			try
     			{
-    				Integer bpm = new Integer(bpmText.getText().toString());
+    				Integer bpm = Integer.valueOf(bpmText.getText().toString());
     				metronome.setTempo(bpm, 0);
     			}
     			catch(NumberFormatException e)
