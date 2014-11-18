@@ -145,7 +145,7 @@ public class EditFragment extends Fragment
     {
     	onTemplateScreen = false;
 		//System.out.println("Here's where I'd send the template to other fragments.");
-		final List<Vector> sections = new ArrayList<Vector>();
+		final List<Vector<Integer>> sections = new ArrayList<Vector<Integer>>();
 		numSections = t.getNumEntries(); //Have to manually record number of sections throughout adding/deleting.
 		final Vector<Integer> tempoVector = t.getTempoVector();
 		final Vector<Integer> measuresVector = t.getMeasuresVector();

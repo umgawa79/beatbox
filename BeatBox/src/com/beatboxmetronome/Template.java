@@ -54,16 +54,16 @@ public class Template implements Comparable<Template> {
 		composer = "Unknown";
 		creator = "Anonymous";
 		initVectors();
-		Random rand = new Random();
-		tempos.add(rand.nextInt(200)); // TODO get rid of these after testing.
-		tempos.add(rand.nextInt(200));
-		tempos.add(rand.nextInt(200));
-		measures.add(24);
-		measures.add(75);
-		measures.add(48);
-		timesigs.add(3);
-		timesigs.add(7);
+		//Random rand = new Random();
+		tempos.add(144); // TODO get rid of these after testing.
+		tempos.add(120);
+		tempos.add(88);
+		measures.add(4);
+		measures.add(6);
+		measures.add(8);
 		timesigs.add(4);
+		timesigs.add(3);
+		timesigs.add(2);
 	}
 	
 	private void initVectors()
