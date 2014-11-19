@@ -1,6 +1,5 @@
 package com.beatboxmetronome;
 
-import android.support.v4.app.ListFragment;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,9 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-import com.beatboxmetronome.LoadListFragment.OnTemplateSelectedListener;
-
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,12 +21,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Button;
+import android.content.DialogInterface;
 
 
-/**
- * @author Michael O'Sullivan
- *
- */
 public class EditFragment extends Fragment
 {
 	ListView listView;
@@ -208,12 +202,24 @@ public class EditFragment extends Fragment
 		Button saveButton = (Button) curView.findViewById(R.id.saveCreateButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				t.setTemposVector(tempoVector);
-				t.setMeasuresVector(measuresVector);
-				t.setTimesigsVector(timeSigsVector);
-				t.setNumEntries(numSections);
-     
-				goToSaveView(t);
+				if(numSections == 0)
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.missing_template_sections_title)
+					.setMessage(R.string.missing_template_sections_message)
+					.setPositiveButton(R.string.OK, null)
+					.show();
+				}
+				else
+				{
+					t.setTemposVector(tempoVector);
+					t.setMeasuresVector(measuresVector);
+					t.setTimesigsVector(timeSigsVector);
+					t.setNumEntries(numSections);
+
+					goToSaveView(t);
+				}
 			}
 		});
 		
@@ -263,7 +269,7 @@ public class EditFragment extends Fragment
 					String beatsPerMeasureText = beatsPerMeasureEditText.getText().toString();
 					if(beatsPerMeasureText.length() > 0)
 					{
-						newBeatsPerMeasure = Integer.parseInt(measuresText);
+						newBeatsPerMeasure = Integer.parseInt(beatsPerMeasureText);
 					}
 
 					if((newBPM > 0) && (newMeasures > 0) && (newBeatsPerMeasure > 0))
@@ -383,21 +389,30 @@ public class EditFragment extends Fragment
 		saveInfoButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				String potentialName = (saveTitle.getText().toString());
-				if (potentialName == null || potentialName.equals("")) potentialName = "Untitled";
-				t.setTemplateName(potentialName);
-				t.setComposer(saveComposer.getText().toString());
-				t.setDescription(saveDescription.getText().toString());
-				t.setCreator(saveCreator.getText().toString());
-				
-				try {
-					t.saveTemplate();
-					((MainActivity) getActivity()).getLoadListFragment().onSaveRequest();
-				} catch(IOException e) {
-					System.out.println("Exception trying to save template");
+				if (potentialName == null || potentialName.equals(""))
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.missing_template_name_title)
+					.setMessage(R.string.missing_template_name_message)
+					.setPositiveButton(R.string.OK, null)
+					.show();
 				}
-				
-				goToTemplateList();
-				
+				else
+				{
+					t.setTemplateName(potentialName);
+					t.setComposer(saveComposer.getText().toString());
+					t.setDescription(saveDescription.getText().toString());
+					t.setCreator(saveCreator.getText().toString());
+
+					try {
+						t.saveTemplate();
+						((MainActivity) getActivity()).getLoadListFragment().onSaveRequest();
+					} catch(IOException e) {
+						System.out.println("Exception trying to save template");
+					}
+					goToTemplateList();
+				}
 			}
 		});
 		
@@ -405,7 +420,6 @@ public class EditFragment extends Fragment
 		cancelSaveInfoButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				goToSectionList(t);
-	
 			}
 		});
 		
@@ -420,9 +434,4 @@ public class EditFragment extends Fragment
 			this.fill(currentDir);
 		}
 	}
-
-	
-	
 }
-    
-

@@ -11,13 +11,14 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/save_title"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
     
     <EditText android:id="@+id/save_edit_title"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:singleLine="true"
         android:hint="@string/save_title_hint" />
     
     <TextView 
@@ -34,6 +35,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:singleLine="true"
         android:hint="@string/save_composer_hint" />
     
     <TextView
@@ -50,6 +52,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:singleLine="true"
         android:hint="@string/save_description_hint" />
     
     <TextView
@@ -66,6 +69,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:singleLine="true"
         android:hint="@string/save_creator_hint" />
     
     <LinearLayout
@@ -85,7 +89,7 @@
         	android:layout_width="0dp"
         	android:layout_height="match_parent"
         	android:layout_weight="1"
-        	android:text="@string/save_bSave"
+        	android:text="@string/Save"
          	/>
     
     	

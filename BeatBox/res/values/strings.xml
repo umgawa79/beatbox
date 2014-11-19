@@ -28,7 +28,7 @@
 	<string name="save_composer">Composer or Artist</string>
 	<string name="save_creator">Creator</string>
 	<string name="save_description">Description</string>
-	<string name="save_bSave">Save</string>
+	<string name="Save">Save</string>
 	<string name="save_bCancel">Cancel</string>
 	<string name="save_title_hint">Enter the name of the song</string>
 	<string name="save_composer_hint">Enter the name of the composer</string>
@@ -46,7 +46,6 @@
     <string name="create_title">Edit Template</string>
     <string name="create_plus_desc">Add another section</string>
     <string name="Back">Back</string>
-    <string name="create_save">save</string>
     <string name="createNewSection">Add Section</string>
    
     
@@ -58,6 +57,10 @@
     <string name="Cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="tempo_dialog">TempoDialog</string>
+    <string name="missing_template_name_title">Missing Template Name</string>
+    <string name="missing_template_name_message">You must enter a name for the template</string>
+    <string name="missing_template_sections_title">Missing Template Sections</string>
+    <string name="missing_template_sections_message">Your template is empty! Please add at least one section to the template.</string>
 	
 	
 	

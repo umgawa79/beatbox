@@ -333,7 +333,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     			try
     			{
     				Integer bpm = Integer.valueOf(bpmText.getText().toString());
-    				metronome.setTempo(bpm, 0);
+    				metronome.setTempo(bpm, MetronomeFragment.MetronomeMode.BASIC);
     			}
     			catch(NumberFormatException e)
     			{}

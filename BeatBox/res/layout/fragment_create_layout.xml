@@ -65,7 +65,7 @@
             android:layout_weight="1"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
-            android:text="@string/create_save" />
+            android:text="@string/Save" />
 
 
 

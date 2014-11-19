@@ -29,12 +29,11 @@ import android.widget.TextView;
 public class MetronomeFragment extends Fragment implements OnClickListener
 {
 	private Integer mTempo;
-	private enum MetronomeMode { BASIC, TEMPLATE };
+	public enum MetronomeMode { BASIC, TEMPLATE };
 	private MetronomeMode mMode;
 	private MediaPlayer mMediaPlayer;
 	private TempoPlayer mTempoPlayer;
 	private Handler mHandler;
-	private Template curTemplate;
 	private TimelinePlayer mTimelinePlayer;
 	
 	
@@ -98,7 +97,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
         TextView tv = (TextView) fragView.findViewById(R.id.bpm_text_basic);
         tv.setOnClickListener(this);
         
-        setTempo(mTempo, 0);
+        setTempo(mTempo, MetronomeMode.BASIC);
 
         return fragView;
     }
@@ -177,7 +176,6 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	    			template_bpm.setVisibility(View.VISIBLE);
 	    			basic_bpm.setVisibility(View.GONE);
 	    			mMode = MetronomeMode.TEMPLATE;
-	    			//load(curTemplate);
 	    			break;
 	    		}
 	    		case TEMPLATE:
@@ -251,7 +249,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 *******************************************************************************************************************/
 	public void decTempo()
     {
-    	setTempo(--mTempo, 0);
+    	setTempo(--mTempo, MetronomeMode.BASIC);
     }
     
     
@@ -260,7 +258,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 *******************************************************************************************************************/
 	public void incTempo()
     {
-    	setTempo(++mTempo, 0);
+    	setTempo(++mTempo, MetronomeMode.BASIC);
     }
 	
     
@@ -268,31 +266,39 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 * Updates the tempo value displayed by the TextView widget
 	 * @param bpm 
 	 *******************************************************************************************************************/
-    public void setTempo(int bpm, int type) //type: 0 for basic, 1 for template
+    public void setTempo(int bpm, MetronomeMode type)
     {
     	View v = this.getView();
-    	TextView bpmText;
+    	TextView bpmText = null;
     	if(v != null)
     	{
-    		if(type == 0){
-    			bpmText = (TextView) v.findViewById(R.id.bpm_text_basic);
-    		}
-    		else{
-    			bpmText = (TextView) v.findViewById(R.id.bpm_text_template);
+    		switch(type)
+    		{
+    			case BASIC: bpmText = (TextView) v.findViewById(R.id.bpm_text_basic); break;
+    			case TEMPLATE: bpmText = (TextView) v.findViewById(R.id.bpm_text_template); break;
     		}
     		
     		if(bpmText != null)
     		{
-    			if(type == 0){
-	    			mTempo = bpm;
-	    			String text = new String();
-	    			text += mTempo.toString() + " BPM";
-	    			bpmText.setText(text);
-    			}else{
-    				String text = new String();
-	    			text += bpm + " BPM";
-    				bpmText.setText(text);
-    			}
+    			switch(type)
+        		{
+        			case BASIC:
+        			{
+        				mTempo = bpm;
+        				String text = new String();
+        				text += mTempo.toString() + " BPM";
+        				bpmText.setText(text);
+        				mTempoPlayer.setTempo(mTempo);
+        				break;
+        			}
+        			case TEMPLATE:
+        			{
+        				String text = new String();
+        				text += bpm + " BPM";
+        				bpmText.setText(text);
+        				break;
+        			}
+        		}
     		}
     	}
     }
@@ -380,10 +386,8 @@ public class MetronomeFragment extends Fragment implements OnClickListener
      *******************************************************************************************************************/
     public void load(Template aTemplate)
     {
-    	curTemplate = aTemplate;
     	if(mMode == MetronomeMode.BASIC)
     		switchModes();
-    	//setTempo(aTemplate.getTempoVector().firstElement().intValue());
     	final View v = this.getView(); //Added final to pass it as a parameter to the timeline class
     	TextView songTitle = (TextView) v.findViewById(R.id.song_title_text);
     	songTitle.setText(aTemplate.getTemplateName().toCharArray(), 0, aTemplate.getTemplateName().length());
@@ -398,6 +402,6 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     		};
     	}, v, aTemplate.getTempoVector(), aTemplate.getMeasuresVector(), aTemplate.getTimesigVector());
     	
-    	setTempo(aTemplate.getTempoVector().firstElement().intValue(), 1); //moved from the original position for guaranteed update of the tempo text
+    	setTempo(aTemplate.getTempoVector().firstElement().intValue(), MetronomeMode.TEMPLATE); //moved from the original position for guaranteed update of the tempo text
     }
 }
