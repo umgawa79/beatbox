@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -77,6 +78,12 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                 public void onClick(View v) {
                     switch(v.getId())
                     {
+                    case R.id.song_name_button :
+                    	int position = (Integer)v.getTag();
+                    	System.out.println("Item selected at position: "+position);
+            			Template t = templates.get(position);
+            			((MainActivity)c).onTemplateSelected(position, t);
+                    	break;
                     case R.id.editButton :
                         System.out.println("Edit button clicked at " + v.getTag());
                         ((MainActivity)c).sendTemplateToEdit(templates.get((Integer)v.getTag()));
@@ -172,6 +179,9 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                 }
             };
             uploadInProgress = false;
+            Button loadButton = (Button) v.findViewById(R.id.song_name_button);
+            loadButton.setOnClickListener(mClickListener);
+            loadButton.setTag(position);
             ImageButton edit = (ImageButton) v.findViewById(R.id.editButton);
             edit.setOnClickListener(mClickListener);
             edit.setTag(position);

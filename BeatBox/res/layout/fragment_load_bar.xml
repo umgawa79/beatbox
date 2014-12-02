@@ -12,10 +12,10 @@
 
     <!-- Icons used in this file provided freely by icons8.com -->
 
-     <TextView
+     <Button
         android:id="@+id/song_name_button"
         android:textSize="18sp"
-        android:paddingLeft="3dp"
+        android:paddingLeft="7dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4.99"
@@ -36,7 +36,7 @@
         android:contentDescription="@string/load_upload_button"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:src="@drawable/ic_upload" />
         
     <ImageButton 
