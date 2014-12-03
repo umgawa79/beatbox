@@ -1,5 +1,6 @@
 package com.beatboxmetronome;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List; 
@@ -59,6 +60,70 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
 		if (localList == false) System.out.println("localList set to false");
 	}
 	
+	public void uploadButtonFunc(View v)
+	{
+		System.out.println("Upload button clicked at " + v.getTag());
+        if (uploadInProgress) return; // Allow only 1 upload at a time since global variables required
+        ProgressBar pb = pbars.get((Integer)v.getTag());
+        if (pb.getVisibility()==View.VISIBLE)
+        	{
+        		// Once upload is done, allow progress bar to be hidden.
+        		pb.setVisibility(View.GONE);
+        		System.out.println("set it to gone");
+        		return;
+        	}
+        else pb.setVisibility(View.VISIBLE);
+        toUpload = templates.get((Integer)v.getTag());
+        mPBar = pb;
+        mProgressStatus = 0;
+        uploadInProgress = true;
+        new Thread(new Runnable() {
+            public void run() {
+                while (mProgressStatus < 100) {
+                    mProgressStatus+=5;
+                    try {
+                    	Thread.sleep(100);
+                    }
+                    catch(InterruptedException e) {
+                    	System.out.println("interuppted");
+                    }
+                    // Update the progress bar
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            mPBar.setProgress(mProgressStatus);
+                        }
+                    });
+                }
+                try
+        		{
+                	if (localList) {
+                		System.out.println("Uploading!");
+                		toUpload.uploadTemplate();
+                		// TODO: Need to notify edit screen to update its list...
+                	}
+                	else {
+                		System.out.println("Downloading!");
+                		toUpload.downloadTemplate();
+                		((Activity)c).runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                ((MainActivity)c).getEditFragment().updateTemplatesList();
+                            }
+                        });
+                	}
+        		}
+        		catch(IOException e)
+        		{
+        			e.printStackTrace();
+        			System.out.println("failed to upload");
+        		}
+                uploadInProgress = false;
+            }
+        }).start();
+        System.out.println("end of upload button");
+	}
+	
 	@Override
     public View getView(int position, View convertView, ViewGroup parent)
 	{
@@ -82,6 +147,31 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                     	int position = (Integer)v.getTag();
                     	System.out.println("Item selected at position: "+position);
             			Template t = templates.get(position);
+            			if(!localList) //TODO: temporary way to see if it is already downloaded...
+            			{
+            				File f = new File("/data/data/com.beatboxmetronome/files/local/");
+            				File[] localTemplates = f.listFiles();
+            				String nameToFind = t.getTemplateName() + ".tt";
+            				boolean found = false;
+            				for (File ff: localTemplates)
+            				{
+            					String localName = ff.getName();
+            					if (localName.equals(nameToFind)) {
+            						found = true;
+            						break;
+            					}
+            				}
+            				if (!found) // This online file wasn't previously downloaded, so start the download.
+            				{
+            					AlertDialog.Builder builder = new AlertDialog.Builder(c);
+            					builder.setIcon(android.R.drawable.ic_dialog_alert)
+            					.setTitle("Unable to load template")
+            					.setMessage("You must download the template before you can load it.")
+            					.setPositiveButton(R.string.OK, null)
+            					.show();
+            					break;
+            				}
+            			}
             			((MainActivity)c).onTemplateSelected(position, t);
                     	break;
                     case R.id.editButton :
@@ -89,66 +179,7 @@ public class FileArrayAdapter extends ArrayAdapter<Template>
                         ((MainActivity)c).sendTemplateToEdit(templates.get((Integer)v.getTag()));
                         break;
                     case R.id.uploadButton :
-                        System.out.println("Upload button clicked at " + v.getTag());
-                        if (uploadInProgress) break; // Allow only 1 upload at a time since global variables required
-                        ProgressBar pb = pbars.get((Integer)v.getTag());
-                        if (pb.getVisibility()==View.VISIBLE)
-                        	{
-                        		// Once upload is done, allow progress bar to be hidden.
-                        		pb.setVisibility(View.GONE);
-                        		System.out.println("set it to gone");
-                        		break;
-                        	}
-                        else pb.setVisibility(View.VISIBLE);
-                        toUpload = templates.get((Integer)v.getTag());
-                        mPBar = pb;
-                        mProgressStatus = 0;
-                        uploadInProgress = true;
-                        new Thread(new Runnable() {
-                            public void run() {
-                                while (mProgressStatus < 100) {
-                                    mProgressStatus+=5;
-                                    try {
-                                    	Thread.sleep(100);
-                                    }
-                                    catch(InterruptedException e) {
-                                    	System.out.println("interuppted");
-                                    }
-                                    // Update the progress bar
-                                    mHandler.post(new Runnable() {
-                                        public void run() {
-                                            mPBar.setProgress(mProgressStatus);
-                                        }
-                                    });
-                                }
-                                try
-                        		{
-                                	if (localList) {
-                                		System.out.println("Uploading!");
-                                		toUpload.uploadTemplate();
-                                		// TODO: Need to notify edit screen to update its list...
-                                	}
-                                	else {
-                                		System.out.println("Downloading!");
-                                		toUpload.downloadTemplate();
-                                		((Activity)c).runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-                                                ((MainActivity)c).getEditFragment().updateTemplatesList();
-                                            }
-                                        });
-                                	}
-                        		}
-                        		catch(IOException e)
-                        		{
-                        			e.printStackTrace();
-                        			System.out.println("failed to upload");
-                        		}
-                                uploadInProgress = false;
-                            }
-                        }).start();
-                        System.out.println("end of upload button");
+                    	uploadButtonFunc(v);
                         break;  
                     case R.id.deleteButton :
                         System.out.println("Delete button clicked at " + v.getTag());

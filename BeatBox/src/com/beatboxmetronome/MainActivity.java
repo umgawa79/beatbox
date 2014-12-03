@@ -150,7 +150,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private EditFragment editFrag;
     private EditText mSearchField;
     private ImageButton mSearchButton;
-    private Button mRepoModeButton;
+    private ImageButton mRepoModeButton;
     
     public LoadListFragment getLoadListFragment()
     {
@@ -181,23 +181,26 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 return false;
             }
         });
-        mRepoModeButton = (Button) loadTabItem.getActionView()
+        mRepoModeButton = (ImageButton) loadTabItem.getActionView()
         		.findViewById(R.id.repoModeButton);
         OnClickListener mClickListener = new OnClickListener() {
 
             public void onClick(View v) {
             	if (v.getId()==R.id.repoModeButton)
             	{
-            		if (mRepoModeButton.getText().equals("Download"))
+            		String desc = (String) mRepoModeButton.getContentDescription();
+            		if (desc.equals("Local Templates"))
                 	{
-                			mRepoModeButton.setText("Local");
+                			mRepoModeButton.setImageResource(R.drawable.cloud_mode);
+                			mRepoModeButton.setContentDescription("Cloud Repository");
                 			downloadItemText = "Local";
                 			System.out.println("Calling switchmode local...");
                 			loadFrag.switchMode("Local");
                 	}
                 	else
                 	{
-                		mRepoModeButton.setText("Download");
+                		mRepoModeButton.setImageResource(R.drawable.local_mode);
+                		mRepoModeButton.setContentDescription("Local Templates");
                 		downloadItemText = "Download";
                 		System.out.println("Calling switchmode download...");
                 		loadFrag.switchMode("Download");
@@ -208,7 +211,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         mRepoModeButton.setOnClickListener(mClickListener);
         mSearchButton = (ImageButton) loadTabItem.getActionView()
         		.findViewById(R.id.searchButton);
-        mRepoModeButton.setText(downloadItemText);
+        if (downloadItemText.equals("Local")) {
+        	mRepoModeButton.setImageResource(R.drawable.cloud_mode);
+        	mRepoModeButton.setContentDescription("Cloud Repository");
+        }
+        else {
+        	mRepoModeButton.setImageResource(R.drawable.local_mode);
+        	mRepoModeButton.setContentDescription("Local Templates");
+        }
         mSearchButton.setOnClickListener(new OnClickListener() {
         	   @Override
         	   public void onClick(View v) {

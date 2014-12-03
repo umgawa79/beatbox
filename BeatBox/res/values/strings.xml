@@ -17,6 +17,8 @@
     
     <!-- Strings for the Load Screen -->
 	<string name="download_button">Download</string>
+	<string name="cloud_mode">Cloud Repository</string>
+	<string name="local_mode">Local Templates</string>
 	<string name="load_template_name">Placeholder Name Longer</string>
 	<string name="load_edit_button">Edit</string>
 	<string name="load_upload_button">Upload</string>

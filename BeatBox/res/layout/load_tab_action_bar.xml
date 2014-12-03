@@ -31,12 +31,13 @@
         android:gravity="bottom|center_vertical"
         android:src="@drawable/ic_search" />
     
-    <Button
+    <ImageButton
         android:id="@id/repoModeButton"
+        android:src="@drawable/local_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/search"
-        android:text="@string/download_button"
+        android:contentDescription="@string/local_mode"
         android:layout_alignParentRight="true" />
     
 </RelativeLayout>
