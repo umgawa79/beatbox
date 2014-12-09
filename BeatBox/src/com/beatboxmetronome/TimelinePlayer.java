@@ -36,7 +36,7 @@ public class TimelinePlayer {
 			curPos = tempoTimeline.getScrollX();
 		}
 		
-		scrollTime = (tempoContWidth - curPos - offset) * 110;
+		scrollTime = (tempoContWidth - curPos - offset) * 114;
 		
     	timelineTimer = new CountDownTimer(scrollTime, 100)
     	{          
