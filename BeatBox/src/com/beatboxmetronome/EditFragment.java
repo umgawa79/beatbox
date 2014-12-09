@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -21,7 +22,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Button;
+import android.widget.TextView;
 import android.content.DialogInterface;
+import android.graphics.Color;
 
 
 public class EditFragment extends Fragment
@@ -38,6 +41,8 @@ public class EditFragment extends Fragment
     private boolean onTemplateScreen;
     
     private int numSections;
+    
+    View selectedView;
 
     
     View curView;
@@ -160,6 +165,10 @@ public class EditFragment extends Fragment
 	    LayoutInflater inflater = LayoutInflater.from(c);
 	    curView = inflater.inflate(R.layout.fragment_create_layout, parent, false);
 	    parent.addView(curView, index);
+	    String templateTitle = t.getTemplateName();
+	    if(templateTitle == null || templateTitle.equals("")) templateTitle = "Select a Section To Edit";
+	    TextView listTitle = (TextView) curView.findViewById(R.id.createListTitle);
+	    listTitle.setText(templateTitle);
 	    
         listView = (ListView) curView.findViewById(R.id.sectionList);
         
@@ -178,6 +187,8 @@ public class EditFragment extends Fragment
 						if(!isEditingSection)
 						{
 							isEditingSection = true;
+							selectedView = view;
+							setSelected(selectedView);
 							System.out.println("Item clicked in edit mode at position: " + position + ". Can you believe it?!");
 							playSaveBar.setVisibility(View.GONE);
 							addSectionButton.setVisibility(View.GONE);
@@ -213,6 +224,8 @@ public class EditFragment extends Fragment
 				}
 				else
 				{
+					
+					
 					t.setTemposVector(tempoVector);
 					t.setMeasuresVector(measuresVector);
 					t.setTimesigsVector(timeSigsVector);
@@ -300,6 +313,7 @@ public class EditFragment extends Fragment
 							newSection.set(2, newBeatsPerMeasure);
 							
 							sections.set(pos, newSection);
+							setUnselected(selectedView);
 						}
 							
 						bpmEditText.setText("");
@@ -310,6 +324,7 @@ public class EditFragment extends Fragment
 						playSaveBar.setVisibility(View.VISIBLE);
 						addSectionButton.setVisibility(View.VISIBLE);
 						isEditingSection = false;
+						
 							
 						tsAdapter.notifyDataSetChanged();
 					}
@@ -332,6 +347,7 @@ public class EditFragment extends Fragment
 	                isEditingSection = false;
 	                playSaveBar.setVisibility(View.VISIBLE);
 	                addSectionButton.setVisibility(View.VISIBLE);
+	                setUnselected(selectedView);
 	                }
 	            });
 	            
@@ -340,18 +356,26 @@ public class EditFragment extends Fragment
 	    	public void onClick(View v) {
 	    			if(pos >= 0)
 	    			{
+	    				
+	    				tempoVector.remove(pos);
+						measuresVector.remove(pos);
+						timeSigsVector.remove(pos);
+	    				
 	    				sections.remove(pos);
 	    				numSections--;
 	    				tsAdapter.notifyDataSetChanged();
 	    			}	
 	    			EditText bpmEditText = (EditText) editSpecificSection.findViewById(R.id.editBPM);
 	    			EditText measuresEditText = (EditText) editSpecificSection.findViewById(R.id.editMeasures);
+	    			EditText beatsPerMeasureEditText = (EditText) editSpecificSection.findViewById(R.id.editBeatsPerMeasure);
 					bpmEditText.setText("");
 					measuresEditText.setText("");
+					beatsPerMeasureEditText.setText("");
 					editSpecificSection.setVisibility(View.GONE);
 					playSaveBar.setVisibility(View.VISIBLE);
 					addSectionButton.setVisibility(View.VISIBLE);
 					isEditingSection = false;
+					setUnselected(selectedView);
 
 			}
 		});
@@ -424,6 +448,24 @@ public class EditFragment extends Fragment
 		});
 		
 		return curView;
+    }
+    
+    @SuppressLint("NewApi") public void setSelected(View v) {
+    	int sdk = android.os.Build.VERSION.SDK_INT;
+		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		    v.setBackgroundDrawable( getResources().getDrawable(R.drawable.selected) );
+		} else {
+		    v.setBackground( getResources().getDrawable(R.drawable.selected));
+		}
+    }
+    
+    @SuppressLint("NewApi") public void setUnselected(View v) {
+    	int sdk = android.os.Build.VERSION.SDK_INT;
+		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		    v.setBackgroundDrawable( getResources().getDrawable(R.drawable.edit_border) );
+		} else {
+		    v.setBackground( getResources().getDrawable(R.drawable.edit_border));
+		}
     }
     
     //Called by load tab, notifies edit fragment to reload its list of templates

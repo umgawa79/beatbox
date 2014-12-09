@@ -48,9 +48,12 @@ public class EditTabArrayAdapter extends ArrayAdapter<Template>
         if (t != null) {
         	TextView name = (TextView) v.findViewById(R.id.song_name_button);
         	name.setText(t.getTemplateName());
+        	
+        	/*
             OnClickListener mClickListener = new OnClickListener() {
-
+            	
                 public void onClick(View v) {
+                	
                     switch(v.getId())
                     {
                     case R.id.deleteButton :
@@ -80,6 +83,8 @@ public class EditTabArrayAdapter extends ArrayAdapter<Template>
             ImageButton delete = (ImageButton) v.findViewById(R.id.deleteButton);
             delete.setOnClickListener(mClickListener);
             delete.setTag(position);
+            */
+            
         } 
         return v;
 	}

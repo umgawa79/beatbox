@@ -83,12 +83,14 @@
         	android:layout_width="0dp"
         	android:layout_height="match_parent"
         	android:layout_weight="1"
+        	android:background="@drawable/white_back_blue_border"
         	android:text="@string/save_bCancel" />
     	<Button
         	android:id="@+id/save_button_save"
         	android:layout_width="0dp"
         	android:layout_height="match_parent"
         	android:layout_weight="1"
+        	android:background="@drawable/white_back_blue_border"
         	android:text="@string/Save"
          	/>
     
