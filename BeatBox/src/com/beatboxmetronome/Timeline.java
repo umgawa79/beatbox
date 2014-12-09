@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
@@ -15,6 +16,8 @@ public class Timeline extends HorizontalScrollView{
 	private Vector<Integer> measureVector;
 	private Vector<Integer> timesigVector;
 	private Vector<Integer> sectionVector;
+	TempoPlayer tempoP;
+	MetronomeFragment metronome;
 	
 	public Timeline(Context context) {
 		super(context);
@@ -28,11 +31,13 @@ public class Timeline extends HorizontalScrollView{
 		super(context, attrs, defStyleAttr);
 	}
 	
-	public void setOnScrollViewListener(OnScrollViewListener l, View v, Vector<Integer> tempo, Vector<Integer> measure, Vector<Integer> timesig){
+	public void setOnScrollViewListener(OnScrollViewListener l, View v, Vector<Integer> tempo, Vector<Integer> measure, Vector<Integer> timesig, MetronomeFragment metronome, TempoPlayer tempoPlayer){
 		this.scrollListener = l;
 		this.tempoVector = tempo;
 		this.measureVector = measure;
 		this.timesigVector = timesig;
+		this.metronome = metronome;
+		this.tempoP = tempoPlayer;
 		setSectionVector(v, tempo, measure, timesig);
 	}
 	
@@ -41,7 +46,30 @@ public class Timeline extends HorizontalScrollView{
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
 	
-	public void scrollHandler(View v, TempoPlayer tempoP, int l){
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent e){
+		if(e.getActionMasked() == e.ACTION_SCROLL){
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent e){
+		if(tempoP != null){
+			boolean play = tempoP.getContinue();
+			if(play == true){
+				metronome.pause();
+				super.onTouchEvent(e);
+				metronome.play();
+			}else{
+				super.onTouchEvent(e);
+			}
+		}
+		return true;
+	}
+	
+	public void scrollHandler(View v, int l){
 		Timeline tline = (Timeline) v.findViewById(R.id.tempo_timeline);
 		int padding = tline.getWidth()/2;
 	
@@ -78,10 +106,10 @@ public class Timeline extends HorizontalScrollView{
 		
 		for(int i=0; i<measure.size(); i++){
 			if(i == 0){
-				section += (padding + measure.elementAt(i) * timesig.elementAt(i));
+				section += (padding + measure.elementAt(i) * timesig.elementAt(i) * (60000/ (tempoVector.elementAt(i) * 100)));
 				sectionVector.add(section);
 			}else{
-				section += measure.elementAt(i) * timesig.elementAt(i);
+				section += measure.elementAt(i) * timesig.elementAt(i) * (60000/ (tempoVector.elementAt(i) * 100));
 				sectionVector.add(section);
 			}
 		}

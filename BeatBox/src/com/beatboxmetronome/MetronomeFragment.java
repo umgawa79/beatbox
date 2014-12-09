@@ -152,6 +152,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 *******************************************************************************************************************/
 	private void switchModes()
 	{
+		pause();
 		View v = this.getView();
     	Button modeButton = (Button) v.findViewById(R.id.mode_button);
     	Button inc = (Button) v.findViewById(R.id.inc_tempo_button);
@@ -201,7 +202,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 	 * When in the basic mode, plays an audible click at the tempo specified in the bpm field. When in template mode,
 	 * starts playing the template from its beginning.
 	 *******************************************************************************************************************/
-	private void play()
+	public void play()
 	{
 		View v = this.getView();
 		ImageButton playButton = (ImageButton) v.findViewById(R.id.play_button);
@@ -237,6 +238,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
 		ImageButton pauseButton = (ImageButton) v.findViewById(R.id.pause_button);
 		pauseButton.setVisibility(View.INVISIBLE);
 		
+		mTempoPlayer.stop();
 		mHandler.removeCallbacks(mTempoPlayer);
 		
 		if(((LinearLayout) v.findViewById(R.id.tempo_container)).getChildCount() > 0)
@@ -261,7 +263,14 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	setTempo(++mTempo, MetronomeMode.BASIC);
     }
 	
-    
+	/********************************************************************************************************************
+	 * Returns the tempo value.
+	 *******************************************************************************************************************/
+	public Integer getTempo()
+    {
+    	return mTempo;
+    }
+	
 	/********************************************************************************************************************
 	 * Updates the tempo value displayed by the TextView widget
 	 * @param bpm 
@@ -319,7 +328,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	//get the length of the timeline by adding all the measure * timesig
     	int bmapSize = 0;
     	for(int i=0; i < measureVector.size(); i++){
-    		bmapSize += measureVector.elementAt(i) * timesigVector.elementAt(i);
+    		bmapSize += measureVector.elementAt(i) * timesigVector.elementAt(i) * (60000/ (tempoVector.elementAt(i) * 100));
     	}
     	
     	float padding = (float)(tempoTimeline.getWidth()/2.0)-5;
@@ -356,7 +365,7 @@ public class MetronomeFragment extends Fragment implements OnClickListener
             color.setARGB(255, 0, (int)green, (int)blue);
             
             //draw the rectangle representing this section. The width of the rectangle is proportional to numMeasures*numBeatsPermeasure
-            float width = measureVector.elementAt(i) * timesigVector.elementAt(i) * 1.0f; //1 pixel per beat
+            float width = measureVector.elementAt(i) * timesigVector.elementAt(i) * (60000/ (tempoVector.elementAt(i) * 100)) * 1.0f; //1 pixel per beat
             canv.drawRect(left, 70, left+width, 0, color);
             
             left += width;
@@ -398,9 +407,9 @@ public class MetronomeFragment extends Fragment implements OnClickListener
     	final Timeline tline = (Timeline) v.findViewById(R.id.tempo_timeline);
     	tline.setOnScrollViewListener(new OnScrollViewListener(){
     		public void onScrollChanged(Timeline tl, int l, int t, int oldl, int oldt){
-    			tline.scrollHandler(v, mTempoPlayer, l);
+    			tline.scrollHandler(v, l);
     		};
-    	}, v, aTemplate.getTempoVector(), aTemplate.getMeasuresVector(), aTemplate.getTimesigVector());
+    	}, v, aTemplate.getTempoVector(), aTemplate.getMeasuresVector(), aTemplate.getTimesigVector(), this, mTempoPlayer);
     	
     	setTempo(aTemplate.getTempoVector().firstElement().intValue(), MetronomeMode.TEMPLATE); //moved from the original position for guaranteed update of the tempo text
     }

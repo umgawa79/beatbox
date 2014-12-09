@@ -14,7 +14,7 @@ public class TempoPlayer implements Runnable
 	{
 		mMediaPlayer = mp;
 		mHandler = h;
-		shouldContinue = true;
+		shouldContinue = false;
 	}
 	
 	public synchronized void setTempo(Integer tempo)
@@ -28,9 +28,15 @@ public class TempoPlayer implements Runnable
 		shouldContinue = false;
 	}
 
+	public boolean getContinue()
+	{
+		return shouldContinue;
+	}
+	
 
 	public void run()
 	{
+		shouldContinue = true;
 		if(mMediaPlayer != null)
 		{
 			long period = Math.round(60000.0 / mTempo); //number of milliseconds per beat
@@ -41,6 +47,5 @@ public class TempoPlayer implements Runnable
 				mHandler.postDelayed(this, period);
 			}
 		}
-		shouldContinue = true;
 	}
 }

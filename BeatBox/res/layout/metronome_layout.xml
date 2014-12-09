@@ -24,7 +24,7 @@
 	        android:id="@+id/tempo_timeline"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/border"
+	        android:background="@drawable/timeline_border"
 	        android:scrollbars="none"
 	        android:visibility="invisible"
 	        android:layout_marginLeft="15dp"
@@ -62,27 +62,30 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="30sp"
             android:onClick="decTempo"
+            android:background="@drawable/button_border"
             android:text="@string/dec_tempo" />
 
         <TextView
             android:id="@+id/bpm_text_basic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:textSize="20sp"
+            android:background="@drawable/bpm_border"
             android:text="@string/bpm_label" />
         
         <TextView
             android:id="@+id/bpm_text_template"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:textSize="20sp"
             android:text="@string/bpm_label"
+            android:background="@drawable/bpm_border_default"
             android:visibility="gone"/>
 
         <Button
@@ -90,8 +93,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="30sp"
             android:onClick="incTempo"
+            android:background="@drawable/button_border"
             android:text="@string/inc_tempo" />
     </LinearLayout>
     
@@ -107,7 +111,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/play_button_label"
-            android:src="@drawable/play_button_default" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@null"
+            android:src="@drawable/play_button" />
 
         <ImageButton
             android:id="@+id/pause_button"
@@ -115,15 +122,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/pause_button_label"
-            android:src="@drawable/pause_button_default"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@null"
+            android:src="@drawable/pause_button"
             android:visibility="invisible" />
     </FrameLayout>
 
     <Button
         android:id="@+id/mode_button"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_border"
         android:text="@string/template_mode_label" />
 
 </LinearLayout>
