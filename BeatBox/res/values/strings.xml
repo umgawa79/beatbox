@@ -45,7 +45,7 @@
 	<string name="create_song_description">Description</string>
     <string name="create_song_artist">Artist</string>
     <string name="create_song_creator">Creator</string>
-    <string name="create_title">Edit Template</string>
+    <string name="create_title">Select Section To Edit</string>
     <string name="create_plus_desc">Add another section</string>
     <string name="Back">Back</string>
     <string name="createNewSection">Add Section</string>

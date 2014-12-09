@@ -55,6 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/white_back_blue_border"
             android:text="@string/OK" />
 
         <Button
@@ -62,12 +63,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/white_back_blue_border"
             android:text="@string/Cancel" />
         <Button
             android:id="@+id/button3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/white_back_blue_border"
             android:text="@string/delete" />
 
     </LinearLayout>
