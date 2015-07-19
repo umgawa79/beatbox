@@ -1,0 +1,47 @@
+We can use filename.tt (stands for tempo template) to save our template information. 
+All .tt files can then go in a folder called TempoTemplates. Upon startup,
+the load screen will read every .tt file in this folder and read the NAME from the file and display
+it in the big vertical list.
+
+The format of a .tt file can look like this:
+NAME: Merry Little Lamb
+TEMPO: 144
+TIMESIG: X
+MEASURES: 13
+TEMPO: 120
+TIMESIG: Y
+MEASURES: 15
+TEMPO: 76
+TIMESIG: Z
+MEASURES: 22
+
+I wasn't sure what to do for the time signature since it would look like 4/4 or ¾.
+We could just simply label them with numbers and have a definitions file where we do
+“public static final int FOURFOUR = 1; public static final int THREEFOUR = 2;” and so on.
+Then we could convert between the two easily.
+
+A template object might have variables like this (rough pseudocode):
+class Template
+{
+	String name;
+	tempoArray[];
+	timesigArray[];
+	measuresArray[];
+}
+
+When loading, we will have a loop that looks something like this (just pseudocode):
+while(line != EOF)
+{
+	StringTokenizer st = new StringTokenizer(line);
+	String str = st.nextToken();
+	if (str.equals(“NAME”)) tempoArray[i].name = st.nextToken();
+	if (str.equals(“TEMPO”)) templateArray[i].tempoArray[j] = st.nextToken();
+	else if (str.equals(“TIMESIG”)) templateArray[i].timesigArray[j] = st.nextToken();
+	else if (str.equals(“MEASURES”)) templateArray[i].measuresArray[j] = st.nextToken();
+	j++;
+}
+
+The i variable could be for each file saved and j would be for each tempo in the template/file.
+Then when we have our template loaded we just load our information from its variables.
+Saving would also be similar to loading, but just opposite
+(so read from the template's arrays and write to a .tt file).
